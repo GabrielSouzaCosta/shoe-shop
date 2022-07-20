@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Koulen&display=swap');
+
+$uranian-blue: rgba(182, 220, 254, 1);
+$wheat: rgba(237, 212, 178, 1);
+$international-orange-aerospace: rgba(255, 78, 0, 1);
+$fuchsia-rose: rgba(201, 66, 119, 1);
+$dark-purple: rgba(29, 17, 40, 1);
+$dark-purple-transparent: rgba(29, 17, 40, 0.8);
+
+
+$primary: $uranian-blue;
+$secondary: $wheat;
+$danger: $fuchsia-rose;
+$warning: $international-orange-aerospace;
+$dark: $dark-purple;
+
+$body-color: rgb(184, 182, 182);
+$btn-border-radius: "0";
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+
