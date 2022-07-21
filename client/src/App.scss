@@ -18,7 +18,7 @@ img, svg {
         display: block;
         margin: 0 auto;
         width: 0;
-        height: 8px;
+        height: 3px;
         background-color: $light;
         -webkit-transition: opacity .3s ease,width .3s ease;
         -moz-transition: opacity .3s ease,width .3s ease;
@@ -34,8 +34,23 @@ img, svg {
 
 }
 
+.navlink-active:after {
+  display: block;
+  content: "";
+  margin: 0 auto;
+  width: 75%;
+  height: 3px;
+  background-color: $danger;
+  filter: brightness(130%);
+}
+
 .brand {
   font-family: 'Koulen', cursive;
+}
+
+.custom-brand-link:hover {
+  color: $fuchsia-rose;
+  transition: 1s;
 }
 
 .title {
@@ -134,8 +149,6 @@ img, svg {
 .header {
     max-width: 450px;
     min-height: 560px;
-
-    
   }
 
 // Animations
