@@ -21,7 +21,7 @@ function Footer() {
           </Nav>
 
           <Nav className="flex-column justify-content-center col-12 col-md-6 col-lg-4">
-            <Nav.Item as="p" className="fs-4 pt-3 text-center">
+            <Nav.Item as="p" className="fs-5 pt-3 text-center">
               <strong>Adress:</strong> 1072 Lake Street, Central Park - New York
             </Nav.Item>
             <Nav.Item as="h4" className="text-center fs-4 text-uppercase pb-1 fw-bold">

@@ -91,17 +91,17 @@ function Home() {
 
             <Carousel.Item className="w-100">
               <div className="row justify-content-center w-100 mx-auto my-5 text-uppercase text-light">
-                  <div className="category-card-2 col-2 me-1">
-                    <h3 className="text-center pt-2 h-100 w-100 title fw-bold display-3 text-secondary">
+                  <div className="category-card-2 col-2 px-0 me-1">
+                    <h3 className="text-center pt-2 h-100 title fw-bold display-3 text-secondary">
                       Boots
                     </h3>
                   </div>
-                <div className="category-card-2 col-2 me-1">
+                <div className="category-card-2 col-2 me-1 px-0">
                   <h3 className="text-center pt-2 h-100 w-100 title fw-bold display-3 text-danger">
                     Heels
                   </h3>
                 </div>
-                <div className="category-card-2 col-2">
+                <div className="category-card-2 col-2 px-0">
                   <h3 className="text-center pt-2 h-100 w-100 title fw-bold display-3 text-secondary">
                     Casual
                   </h3>
@@ -112,7 +112,7 @@ function Home() {
 
           <div className="d-flex d-lg-none row justify-content-center w-100 mx-auto text-uppercase">
             <div className="category-card-1 px-0 m-1 col-6">
-              <h3 className="text-center pt-2 h-100 w-100 title fw-bold display-5 text-secondary">
+              <h3 className="text-center pt-2 h-100 px-0 title fw-bold display-5 text-secondary">
                 Basketball Sneakers
               </h3>
             </div>
@@ -126,18 +126,18 @@ function Home() {
                 Sport Sneakers
               </h3>
             </div>
-            <div className="category-card-1 col-6 m-1">
+            <div className="category-card-1 px-0 col-6 m-1">
               <h3 className="text-center pt-2 h-100 w-100 title fw-bold display-4 text-secondary">
                 Boots
               </h3>
             </div>
-            <div className="category-card-1 col-6 m-1">
-              <h3 className="text-center pt-2 h-100 w-100 title fw-bold display-4 text-secondary">
+            <div className="category-card-1 px-0 col-6 m-1">
+              <h3 className="text-center pt-2 h-100 title fw-bold display-4 text-secondary">
                 Heels
               </h3>
             </div>
-            <div className="category-card-1 col-6 m-1">
-              <h3 className="text-center pt-2 h-100 w-100 title fw-bold display-5 text-secondary">
+            <div className="category-card-1 px-0 col-6 m-1">
+              <h3 className="text-center pt-2 h-100 title fw-bold display-5 text-secondary">
                 Casual
               </h3>
             </div>

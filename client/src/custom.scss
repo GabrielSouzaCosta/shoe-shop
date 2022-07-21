@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Koulen&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Koulen&family=Montserrat+Alternates:ital,wght@0,100;0,400;0,500;0,600;0,700;1,200&display=swap');
 
 $uranian-blue: rgba(182, 220, 254, 1);
 $wheat: rgba(237, 212, 178, 1);
@@ -13,6 +13,10 @@ $secondary: $wheat;
 $danger: $fuchsia-rose;
 $warning: $international-orange-aerospace;
 $dark: $dark-purple;
+
+$font-family-sans-serif: 'Montserrat Alternates', sans-serif;
+$font-family-base: 'Montserrat Alternates', sans-serif;
+$font-family-code: 'Montserrat Alternates', sans-serif;
 
 $body-color: rgb(184, 182, 182);
 $btn-border-radius: "0";

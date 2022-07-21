@@ -28,7 +28,7 @@ function ProductDetails() {
               <span className="display-6">Sneakers</span>
               <h1 className="display-4 text-light title ">Adidas NMD </h1>
               <h2 >The adidas NMD R1 is a casual sneaker which combines modern-day Boost comfort with retro running shoe aesthetics.</h2>
-              <span className="col-4 text-light display-5 me-3">
+              <span className="col-4 fw-normal text-light display-5 me-3">
                 $300.00
               </span>
               <div className="row w-100 pt-4">
@@ -46,7 +46,7 @@ function ProductDetails() {
                   </Button>
                 </InputGroup>
                 </span>
-                <Button variant="light" className="col-5 rounded fs-3 text-dark text-uppercase" id="button-addon2">
+                <Button variant="light" className="col-6 rounded fs-3 text-dark text-uppercase" id="button-addon2">
                       Add to Cart
                 </Button>
               </div>
@@ -54,7 +54,7 @@ function ProductDetails() {
             </div>
 
 
-              <h3 className="text-center text-dark text-uppercase display-3  pt-5 mt-5">You May Also Like</h3>
+              <h3 className="text-center text-dark text-uppercase display-3 pt-5 mt-5" style={{fontWeight: "400"}}>You May Also Like</h3>
               <Carousel className="col-12 mx-auto py-5 mb-5" interval={null}>
                 <Carousel.Item className="w-100 d-flex justify-content-evenly text-center my-5">
                   <img src="/images/black-jiracheep-B5MKPcwjXr4-unsplash.jpg" className="shadow-dark" style={{maxWidth: "400px"}}/>
