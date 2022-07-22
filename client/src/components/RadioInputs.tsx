@@ -21,9 +21,10 @@ function RadioInputs ({handleClick}: ProductsProps ) {
   return (
   <>
       <ToggleButtonGroup className='text-uppercase row w-100 px-3 my-1 mx-auto' type="radio" name="options">
-      <span className='m-2 text-end'>
-        <button onClick={handleClick} className='btn btn-danger ms-auto rounded-circle fw-bold'>X</button>
-      </span>
+      <div className='d-flex m-2 align-items-end'>
+          <h3 className='btn btn-warning rounded text-light fs-3 text-center mx-auto'>categories</h3>
+          <button onClick={handleClick} className='btn btn-danger rounded-circle fw-bold text-end'>X</button>
+      </div>
       {radios.map((radio, idx) => (
           <ToggleButton
             key={idx}

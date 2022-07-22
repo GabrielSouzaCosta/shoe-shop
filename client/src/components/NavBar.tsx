@@ -1,3 +1,5 @@
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Navbar, Nav } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
 
@@ -16,9 +18,18 @@ function NavBar() {
             } >
             Store
           </NavLink>
-          <NavLink to="/login" className="line-down position-absolute end-0 pe-3">
-            Login
-          </NavLink>
+          <Nav className="ms-auto position-absolute end-0">
+            <NavLink to="/cart" className={({ isActive }) =>
+              isActive ? "text-danger pe-3 navlink-active" : "text-danger pe-3"
+            } 
+            >
+            <FontAwesomeIcon icon={faCartShopping} className="pe-2" />
+            Cart
+            </NavLink>
+            <NavLink to="/login" className="pe-3">
+              Login
+            </NavLink>
+          </Nav>
         </Nav>
       </Container>
     </Navbar>

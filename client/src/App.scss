@@ -38,7 +38,7 @@ img, svg {
   display: block;
   content: "";
   margin: 0 auto;
-  width: 75%;
+  width: 80%;
   height: 3px;
   background-color: $danger;
   filter: brightness(130%);
@@ -145,11 +145,20 @@ img, svg {
   -webkit-box-shadow: 0px 10px 14px 3px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 10px 14px 3px rgba(0,0,0,0.75);
 }
+.shoes-card{
+  max-width: 450px;
+  min-height: 560px;
+}
 
-.header {
-    max-width: 450px;
-    min-height: 560px;
-  }
+.bg-login {
+  background: url('/images/blackwhite-image1.jpg') no-repeat left;
+  background-size: contain;
+}
+
+.bg-register {
+  background: url('/images/jean-luc-catarin-0TH0YGKS1iU-unsplash.jpg') no-repeat left;
+  background-size: contain;
+}
 
 // Animations
 /* ----------------------------------------------

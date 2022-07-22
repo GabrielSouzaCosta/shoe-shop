@@ -1,10 +1,37 @@
 import { useState } from 'react'
 import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
-import { Container } from 'react-bootstrap'
+import { Button, Container } from 'react-bootstrap'
 import RadioInputs from '../components/RadioInputs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFilter } from '@fortawesome/free-solid-svg-icons'
+import { faCartPlus, faFilter } from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom'
+
+type Props = {
+  image: string
+}
+
+const ShoesCards: React.FC<Props> = ({
+  image
+}) => 
+  (
+    <Link to="/shoes/1"  className='shoes-card col-3'>
+      <div className='header' style={{background: `url('/images/${image}') no-repeat top`, backgroundSize: "cover", height: "85%"}}>
+      </div>
+      <div className='body text-center' style={{background: "#ffffff no-repeat bottom", minHeight: "15%"}}>
+        <h2 className='text-dark px-1 pt-1'>
+          Tênis Vans Revan T1
+        </h2>
+        <span className='text-dark fs-3'>
+          $199
+          <Button variant='danger' className='ms-3 mb-1 text-uppercase fw-bold'>
+            See Details
+          </Button>
+          <FontAwesomeIcon icon={faCartPlus} className="text-warning ps-3" />
+        </span>
+      </div>
+    </Link>
+  )
 
 function Products() {
   const [showFilter, setShowFilter] = useState(false);
@@ -24,46 +51,8 @@ function Products() {
       }
       <Container className='h-100 mt-1' fluid>
         <div className='row h-100 justify-content-center mx-auto py-5 position-relative' style={{width: "85%"}}>
-          <div className='shoes-card col-3'>
-            <div className='header' style={{background: "url('/images/paul-gaudriault-a-QH9MAAVNI-unsplash.jpg') no-repeat center", backgroundSize: "cover"}}>
-              
-            </div>
-          </div>
-          <div className='shoes-card col-3'>
-            <div className='header' style={{background: "url('/images/irene-kredenets-dwKiHoqqxk8-unsplash.jpg') no-repeat center", backgroundSize: "cover"}}>
-              
-            </div>
-          </div>
-          <div className='shoes-card col-3 mb-4'>
-            <div className='header' style={{background: "url('/images/maxim-hopman-8cT5ja0P_N4-unsplash.jpg') no-repeat center", backgroundSize: "cover"}}>
-              
-            </div>
-          </div>
-          <div className='shoes-card col-3 mb-4'>
-            <div className='header' style={{background: "url('/images/joseph-barrientos-4qSb_FWhHKs-unsplash.jpg') no-repeat center", backgroundSize: "cover"}}>
-              
-            </div>
-          </div>
-          <div className='shoes-card col-3'>
-            <div className='header' style={{background: "url('/images/joseph-barrientos-4qSb_FWhHKs-unsplash.jpg') no-repeat center", backgroundSize: "cover"}}>
-              
-            </div>
-          </div>
-          <div className='shoes-card col-3'>
-            <div className='header' style={{background: "url('/images/usama-akram-s-gYAbQToXk-unsplash.jpg') no-repeat center", backgroundSize: "cover"}}>
-              
-            </div>
-          </div>
-          <div className='shoes-card col-3'>
-            <div className='header' style={{background: "url('/images/usama-akram-g3CMh2nqj_w-unsplash.jpg') no-repeat center", backgroundSize: "cover"}}>
-              
-            </div>
-          </div>
-          <div className='shoes-card col-3'>
-            <div className='header' style={{background: "url('/images/usama-akram-g3CMh2nqj_w-unsplash.jpg') no-repeat center", backgroundSize: "cover"}}>
-              
-            </div>
-          </div>
+          <ShoesCards image={"paul-gaudriault-a-QH9MAAVNI-unsplash.jpg"} />
+          <ShoesCards image={"irene-kredenets-dwKiHoqqxk8-unsplash.jpg"} />
         </div>
       </Container>
     </div>
