@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import Footer from "../components/Footer"
 
 function Home() {
-  const [showArrow, setShowArrow] = useState(false)
+  const [showArrow, setShowArrow] = useState<boolean>(false)
 
   return (
   <>
@@ -26,7 +26,7 @@ function Home() {
             <h3 className="text-secondary display-6 mb-4" >
               Premium Brands.
             </h3>
-            <Button variant="light" className="rounded-pill px-4 fs-3 mx-auto fw-bold" onMouseEnter={(e) => setShowArrow(true)} >
+            <Button variant="light" className="rounded-pill px-4 fs-3 mx-auto fw-bold" onMouseEnter={() => setShowArrow(true)} >
               <span className="pe-2">See our products</span>
               {(showArrow) ? 
                 <span style={{verticalAlign: "middle"}}>
