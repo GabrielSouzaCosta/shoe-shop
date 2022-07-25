@@ -12,10 +12,12 @@ export const useAuth = () => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    const getData = async () => {
-      setUser(await authService.profile()) 
+    if (sessionStorage.getItem("token")) {
+      const getData = async () => {
+        setUser(await authService.profile()) 
+      }
+      getData()
     }
-    getData()
   }, [])
 
   return user;
