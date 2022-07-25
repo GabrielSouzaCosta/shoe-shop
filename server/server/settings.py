@@ -148,6 +148,7 @@ REST_REGISTRATION = {
     'REGISTER_EMAIL_VERIFICATION_URL': os.environ.get('FRONTEND_URL','http://localhost:3000/')+'verify-email/',
     'VERIFICATION_FROM_EMAIL': 'gabrielsscosta2010@hotmail.com',
     'LOGIN_RETRIEVE_TOKEN': True,
+    'USER_HIDDEN_FIELDS': ('user_permissions', 'groups')
 }
 
 

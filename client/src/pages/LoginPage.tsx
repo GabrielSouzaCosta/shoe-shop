@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import AuthCard from "../components/AuthCard"
 import { authService }from '../utils/authService'
+import { useAuth } from "../utils/useAuth"
 
 function LoginPage() {
   const [email, setEmail] = useState<string>("")
@@ -24,13 +25,20 @@ function LoginPage() {
       navigate('/');
     })
     .catch((err: any) => setMsg(Object.values<[]>(err.response.data)[0]))
-    console.log(msg)  
+    console.log(msg)
   }
 
   return (
     <div className="bg-login bg-dark vh-100">
       <div className="d-flex align-items-center justify-content-center h-100 ms-auto bg-primary" style={{width: "59.5%"}}>
-        <AuthCard type={"login"} email={email} password={password} onEmailChange={onEmailChange} onPasswordChange={onPasswordChange} handleLogin={handleLogin} msg={msg} />
+        <AuthCard type={"login"} 
+        email={email} 
+        password={password} 
+        onEmailChange={onEmailChange} 
+        onPasswordChange={onPasswordChange} 
+        handleLogin={handleLogin} 
+        msg={msg} 
+        />
       </div>
     </div>
   )

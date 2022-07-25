@@ -1,9 +1,21 @@
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import { Container, Navbar, Nav } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../utils/useAuth";
+import {authService } from '../utils/authService'
 
 function NavBar() {
+
+  const user = useAuth()
+
+  function handleLogout() {
+    sessionStorage.removeItem("token")
+  }
+
   return (
     <Navbar bg="dark" expand="lg" className="sticky-top justify-content-center">
       <Container fluid>
@@ -26,9 +38,23 @@ function NavBar() {
             <FontAwesomeIcon icon={faCartShopping} className="pe-2" />
             Cart
             </NavLink>
-            <NavLink to="/login" className="pe-3">
-              Login
-            </NavLink>
+            {(user.is_superuser) ? 
+              <NavLink to="/administration" className="pe-2">
+                Admin
+              </NavLink>
+            :
+              ""
+            }
+
+            {(sessionStorage.getItem("token"))?
+              <a href="" onClick={handleLogout} className=" pe-3">
+                Logout
+              </a>
+            :
+              <NavLink to="/login" className="pe-3">
+                Login
+              </NavLink>
+            }
           </Nav>
         </Nav>
       </Container>

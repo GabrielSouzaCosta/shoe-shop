@@ -7,14 +7,28 @@ type Props = {
   type: string,
   email: string,
   password: string,
-  re_password?: string,
+  rePassword?: string,
   msg: [], 
   onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
   onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  handleLogin? : () => void
+  onRePasswordChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+  handleLogin? : () => void,
+  handleRegister? : () => void
 }
 
-const AuthCard = ({ type, email, password, re_password, msg, onEmailChange, onPasswordChange, handleLogin }: Props) =>
+const AuthCard = ({ 
+  type, 
+  email, 
+  password, 
+  rePassword,
+  msg,
+  onEmailChange,
+  onPasswordChange,
+  onRePasswordChange,
+  handleLogin,
+  handleRegister
+  }: Props) =>
+  
   (
     <div className="card w-75 pb-3">
           <h1 className="title text-center pt-4 text-dark display-2">
@@ -36,7 +50,7 @@ const AuthCard = ({ type, email, password, re_password, msg, onEmailChange, onPa
                 <Form.Label htmlFor="re-email" className="fs-3">
                   Repeat Password
                 </Form.Label>
-                <Form.Control id="re-email" type="password" className="border border-2 border-dark mb-1" placeholder="repeatyourpassword..."/>
+                <Form.Control value={rePassword} onChange={onRePasswordChange} id="re-email" type="password" className="border border-2 border-dark mb-1 text-dark" placeholder="repeatyourpassword..."/>
                 <Form.Text id="passwordHelpBlock" className='fs-5'>
                   Your password must be at least 8 characters long
                 </Form.Text>
@@ -47,7 +61,7 @@ const AuthCard = ({ type, email, password, re_password, msg, onEmailChange, onPa
             <div className="text-center mt-2 fs-5">{msg}</div>
             <div className="col-6 text-center pt-3">
             {(type === "register") ?
-              <Button variant="dark" className="rounded text-uppercase fs-2 brand px-4">
+              <Button onClick={handleRegister} variant="dark" className="rounded text-uppercase fs-2 brand px-4">
                 Sign up
               </Button>
             :
