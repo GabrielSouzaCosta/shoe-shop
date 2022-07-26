@@ -1,8 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import NavBar from '../components/NavBar'
 import { Button, Container, Form } from 'react-bootstrap'
+import axios from 'axios'
 
 function Checkout() {
+  const [zipcode, setZipcode] = useState<string>("")
+  const [shippingDetails, setShippingDetails] = useState<any>({})
+
+  function calcularFrete() {
+    axios.get(import.meta.env.VITE_BACKEND_URL+'/shipping-details/?zipcode='+zipcode, {
+      headers: {
+        'Authorization': 'Token '+sessionStorage.getItem('token')
+      }
+    }) 
+    .then(res => setShippingDetails(res.data))
+    .then(() => console.log(shippingDetails.MsgErro))
+  }
+
   return (
   <>
   <section className='bg-secondary min-vh-100 text-dark'>
@@ -39,11 +53,23 @@ function Checkout() {
               <Form.Label className='fs-5 mx-2 mb-0'>
                 Zipcode:
               </Form.Label>
-              <Form.Control className='w-25 rounded-0' placeholder="00000-000" />
-              <Button className='ms-2 title fw-bold fs-5 p-1 px-2'>
+              <Form.Control 
+                value={zipcode} 
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setZipcode(e.currentTarget.value)} 
+                className='w-50 rounded-0 text-dark' 
+                placeholder="00000-000"
+                required
+              />
+
+              <Button onClick={calcularFrete} className='ms-2 title fw-bold fs-5 p-1 px-2'>
                 SUBMIT
               </Button>
             </div>
+              {(shippingDetails.MsgErro) ?
+                <div className='mt-2 fs-5'>{shippingDetails.MsgErro}</div>
+              :
+                ""
+              }
             <div className='row mt-3'>
               <hr className='col-10' style={{border: "2px solid #000000"}}></hr>
             </div>
