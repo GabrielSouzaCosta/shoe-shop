@@ -31,5 +31,5 @@ class ProductsListView(generics.ListCreateAPIView):
 class GetShippingInfoView(APIView):
   def get(self, request):
     zipcode = request.query_params.get('zipcode')
-    shipping = get_shipping(zipcode)
-    return Response(shipping)
+    response = get_shipping(zipcode)  
+    return Response({"sedex":response[0], "pac":response[1]})

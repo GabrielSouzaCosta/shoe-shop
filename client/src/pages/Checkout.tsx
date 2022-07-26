@@ -1,20 +1,21 @@
 import React, { useState } from 'react'
 import NavBar from '../components/NavBar'
-import { Button, Container, Form } from 'react-bootstrap'
+import { Button, Container, Form, ToggleButtonGroup } from 'react-bootstrap'
 import axios from 'axios'
 
 function Checkout() {
   const [zipcode, setZipcode] = useState<string>("")
-  const [shippingDetails, setShippingDetails] = useState<any>({})
+  const [shippingDetails, setShippingDetails] = useState<any>([])
+  const [shippingMethod, setShippingMethod] = useState<string>("")
 
-  function calcularFrete() {
+  function calcularFrete(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
     axios.get(import.meta.env.VITE_BACKEND_URL+'/shipping-details/?zipcode='+zipcode, {
       headers: {
         'Authorization': 'Token '+sessionStorage.getItem('token')
       }
     }) 
-    .then(res => setShippingDetails(res.data))
-    .then(() => console.log(shippingDetails.MsgErro))
+    .then(res => setShippingDetails([res.data.sedex, res.data.pac]))
   }
 
   return (
@@ -49,27 +50,51 @@ function Checkout() {
             <h2 className='title fw-bold fs-1'>
               Shipping
             </h2>
-            <div className="col-6 d-flex align-items-center me-auto">
+ 
+            <Form onSubmit={calcularFrete} className="col-6 d-flex align-items-center me-auto" >
               <Form.Label className='fs-5 mx-2 mb-0'>
                 Zipcode:
               </Form.Label>
-              <Form.Control 
-                value={zipcode} 
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setZipcode(e.currentTarget.value)} 
-                className='w-50 rounded-0 text-dark' 
+              <Form.Control
+                value={zipcode}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setZipcode(e.currentTarget.value)}
+                className='w-50 rounded-0 text-dark'
                 placeholder="00000-000"
                 required
               />
-
-              <Button onClick={calcularFrete} className='ms-2 title fw-bold fs-5 p-1 px-2'>
+              <Button type="submit" className='ms-2 title fw-bold fs-5 p-1 px-2'>
                 SUBMIT
               </Button>
-            </div>
-              {(shippingDetails.MsgErro) ?
-                <div className='mt-2 fs-5'>{shippingDetails.MsgErro}</div>
+            </Form>
+              {(shippingDetails) ? 
+              shippingDetails.map((shipping:any, i:number) => {
+                return (
+                  <div key={'shipping-'+shipping.Codigo} className='form-check row mt-3'>
+                    <div className='py-1 title fs-5 bg-light border col-6'>
+                      <input 
+                      className="form-check-input ms-0" 
+                      required value={i === 0 ? "SEDEX":"PAC"} 
+                      onChange={(e) => setShippingMethod(e.currentTarget.value)} 
+                      type="radio" 
+                      name="shippingMethod" 
+                      />
+                      <label className='ms-2'>
+                        {i === 0 ? "SEDEX":"PAC"}: ${shipping.Valor} ({shipping.PrazoEntrega} dias úteis)
+                      </label>
+                    </div>
+                  </div>
+                  )
+                })
               :
                 ""
               }
+
+
+            {(shippingDetails.MsgErro) ?
+              <div className='mt-2 fs-5'>{shippingDetails.MsgErro}</div>
+            :
+              ""
+            }
             <div className='row mt-3'>
               <hr className='col-10' style={{border: "2px solid #000000"}}></hr>
             </div>

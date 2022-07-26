@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import AuthCard from "../components/AuthCard"
-import { authService }from '../utils/authService'
-import { useAuth } from "../utils/useAuth"
+import AuthCard from "../../components/AuthCard"
+import { authService }from '../../utils/authService'
+import { useAuth } from "../../utils/useAuth"
 
 function LoginPage() {
   const [email, setEmail] = useState<string>("")

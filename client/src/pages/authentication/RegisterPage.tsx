@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import AuthCard from "../components/AuthCard"
-import { authService } from '../utils/authService'
+import AuthCard from "../../components/AuthCard"
+import { authService } from '../../utils/authService'
 
 function RegisterPage() {
   const [email, setEmail] = useState<string>("")
@@ -25,7 +25,7 @@ function RegisterPage() {
   async function handleRegister() {
     authService.register(email, password, rePassword)
     .then((res: any) => {
-      navigate('/');
+      navigate('/register-successful/');
     })
     .catch((err: any) => setMsg(Object.values<[]>(err.response.data)[0]))
     console.log(msg)

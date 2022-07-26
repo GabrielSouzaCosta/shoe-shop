@@ -153,9 +153,9 @@ REST_REGISTRATION = {
     'REGISTER_VERIFICATION_ENABLED': True,
     'REGISTER_EMAIL_VERIFICATION_ENABLED': True,
     'RESET_PASSWORD_VERIFICATION_ENABLED': True,
-    'REGISTER_VERIFICATION_URL': os.environ.get('FRONTEND_URL', 'http://localhost:3000/')+'verify-user/',
-    'RESET_PASSWORD_VERIFICATION_URL': os.environ.get('FRONTEND_URL','http://localhost:3000/')+'reset-password/',
-    'REGISTER_EMAIL_VERIFICATION_URL': os.environ.get('FRONTEND_URL','http://localhost:3000/')+'verify-email/',
+    'REGISTER_VERIFICATION_URL': os.environ.get('FRONTEND_URL', 'http://127.0.0.1:5173')+'/verify-user/',
+    'RESET_PASSWORD_VERIFICATION_URL': os.environ.get('FRONTEND_URL','http://127.0.0.1:5173')+'/reset-password/',
+    'REGISTER_EMAIL_VERIFICATION_URL': os.environ.get('FRONTEND_URL','http://127.0.0.1:5173')+'/verify-email/',
     'VERIFICATION_FROM_EMAIL': 'gabrielsscosta2010@hotmail.com',
     'LOGIN_RETRIEVE_TOKEN': True,
     'USER_HIDDEN_FIELDS': ('user_permissions', 'groups')

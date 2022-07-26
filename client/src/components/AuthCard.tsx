@@ -69,7 +69,7 @@ const AuthCard = ({
                 <Button onClick={handleLogin} className="rounded text-uppercase fs-2 brand px-4 mb-2">
                   Sign in
                 </Button>
-                <Link to="forgot-password">
+                <Link to="/forgot-password">
                   <Form.Text className="link-danger fs-5">
                       Forgot your password?
                   </Form.Text>
