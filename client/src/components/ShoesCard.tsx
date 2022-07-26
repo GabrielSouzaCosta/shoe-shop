@@ -4,18 +4,20 @@ import { Link } from 'react-router-dom'
 import { Button } from 'react-bootstrap'
 
 type Props = {
+    slug: string,
     name: string,
     price: number,
     image: string
   }
   
 const ShoesCard = ({
+    slug,
     name,
     price,
     image
     }: Props) => 
     (
-        <Link to="/shoes/1"  className='shoes-card col-3'>
+        <Link to={"/shoes/"+slug}  className='shoes-card col-3'>
         <div className='bg-light header' style={{background: `url('${'http://localhost:8000'+image}') no-repeat center`, backgroundSize: "auto 97%", minHeight: "400px"}}>
         </div>
         <div className='body text-center pb-2' style={{background: "#ffffff no-repeat bottom", minHeight: "15%"}}>

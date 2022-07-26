@@ -1,15 +1,16 @@
-from rest_framework import generics
+from django.shortcuts import get_object_or_404
 from rest_framework.views import Response, APIView
 from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework import viewsets
 from .models import Category, Product
 from .serializers import ProductsSerializer
 from .scripts import get_shipping
 
-class ProductsListView(generics.ListCreateAPIView):
+class ProductsListView(viewsets.ViewSet):
   serializer_class = ProductsSerializer
   permission_classes = [IsAdminUser]
+  lookup_field = 'slug'
 
-  #filter by category or return all products
   def get_queryset(self):
     category = self.request.query_params.get('category')
     if category:
@@ -22,6 +23,12 @@ class ProductsListView(generics.ListCreateAPIView):
     queryset = self.get_queryset()
     serializer = ProductsSerializer(queryset, many=True)
     return Response(serializer.data)
+
+  def retrieve(self, request, slug):
+        queryset = Product.objects.all()
+        product = get_object_or_404(queryset, slug=slug)
+        serializer = ProductsSerializer(product)
+        return Response(serializer.data)
 
   def get_permissions(self):
         if self.request.method == 'POST':

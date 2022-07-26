@@ -1,8 +1,29 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Container, Carousel, InputGroup, Form, Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 
+type Shoe = {
+  name: string,
+  price: string,
+  description: string,
+  images: [{
+    get_image: string
+    get_thumbnail: string,
+  }]
+}
+
 function ProductDetails() {
+  const [shoe, setShoe] = useState<Shoe>({})
+  const params = useParams()
+
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/shoes/${params.slug}/`)
+    .then(res => setShoe(res.data))
+  }, [])
+
   return (
     <>
     <div className="bg-orange-gradient min-vh-100">
@@ -12,24 +33,22 @@ function ProductDetails() {
           <div className="row h-100 w-100 align-items-center justify-content-between">
             <div className="col-8 px-3">
               <Carousel className="d-none d-lg-block col-10 py-5" interval={null}>
-                <Carousel.Item className="w-100 text-center my-5">
-                  <img src="/images/black-jiracheep-B5MKPcwjXr4-unsplash.jpg" className="shadow-dark" style={{maxHeight: "600px"}}/>
-                </Carousel.Item>
-                <Carousel.Item className="w-100 text-center my-5">
-                  <img src="/images/ayo-ogunseinde-Mp0qYV0fCfA-unsplash.jpg" className="shadow-dark" style={{maxHeight: "600px"}}/>
-                </Carousel.Item>
-                <Carousel.Item className="w-100 text-center my-5">
-                  <img src="/images/kushagra-kevat-KZs5Bt5VDng-unsplash.jpg" className="shadow-dark" style={{maxHeight: "600px", width: "95%"}}/>
-                </Carousel.Item>
+                {shoe?.images?.map((item) => {
+                  return (
+                    <Carousel.Item className="w-100 text-center my-5">
+                      <img src={import.meta.env.VITE_BACKEND_URL_BASE+item.get_image} className="shadow-dark" style={{maxHeight: "600px"}}/>
+                    </Carousel.Item>
+                  )
+                })}
               </Carousel>
             </div>
 
             <div className="col-4 text-dark">
               <span className="display-6">Sneakers</span>
-              <h1 className="display-4 text-light title ">Adidas NMD </h1>
-              <h2 >The adidas NMD R1 is a casual sneaker which combines modern-day Boost comfort with retro running shoe aesthetics.</h2>
+              <h1 className="display-4 text-light title ">{shoe.name}</h1>
+              <h2 >{shoe.description}</h2>
               <span className="col-4 fw-normal text-light display-5 me-3">
-                $300.00
+                ${shoe.price}
               </span>
               <div className="row w-100 pt-4">
                 <span className="col-5 text-start">
@@ -58,8 +77,8 @@ function ProductDetails() {
               <Carousel className="col-12 mx-auto py-5 mb-5" interval={null}>
                 <Carousel.Item className="w-100 d-flex justify-content-evenly text-center my-5">
                   <img src="/images/black-jiracheep-B5MKPcwjXr4-unsplash.jpg" className="shadow-dark" style={{maxWidth: "400px"}}/>
-                  <img src="/images/ayo-ogunseinde-Mp0qYV0fCfA-unsplash.jpg" className="shadow-dark" style={{maxWidth: "400px"}}/>
-                  <img src="/images/kushagra-kevat-KZs5Bt5VDng-unsplash.jpg" className="shadow-dark" style={{maxWidth: "400px"}}/>
+                  <img src="/images/usama-akram-g3CMh2nqj_w-unsplash.jpg" className="shadow-dark" style={{maxWidth: "400px"}}/>
+                  <img src="/images/illia-melnichuk-iHaEbx1BPg8-unsplash.jpg" className="shadow-dark" style={{maxWidth: "400px"}}/>
                 </Carousel.Item>
               </Carousel>
 

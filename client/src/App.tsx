@@ -22,7 +22,7 @@ function App() {
     <BrowserRouter>
       <Routes>
           <Route path='/' element={ <Home /> }/>
-          <Route path='/shoes/:id' element={ <ProductDetails /> } />
+          <Route path='/shoes/:slug' element={ <ProductDetails /> } />
           <Route path='/shoes' element={ <Products /> } />
           <Route path='/login' element={ <LoginPage /> } />
           <Route path='/forgot-password' element={ <ForgotPassword /> } />

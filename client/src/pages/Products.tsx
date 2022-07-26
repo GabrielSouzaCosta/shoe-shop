@@ -11,17 +11,19 @@ import ShoesCard from '../components/ShoesCard'
 
 type ShoeCard = {
   name: string,
+  slug: string,
   category: number,
   price: number,
-  get_thumbnail: string
+  images: [{
+    get_image: string,
+    get_thumbnail: string
+  }]
 }
 
 function Products() {
   const [shoes, setShoes] = useState<[]>([]);
   const [showFilter, setShowFilter] = useState(false);
   const [filter, setFilter] = useState<number>(0);
-
-  console.log(filter)
 
   function handleShowFilter() {
     setShowFilter(!showFilter);
@@ -39,7 +41,7 @@ function Products() {
   useEffect(() => {
     axios.get(import.meta.env.VITE_BACKEND_URL+'/shoes/')
     .then(res => setShoes(res.data))
-    .then(res => console.log(shoes))
+    .then(res => console.log(shoes))  
   }, [])
 
   return (
@@ -58,13 +60,13 @@ function Products() {
               shoe.category == filter
             ).map((shoe: ShoeCard) => {
               return(
-                <ShoesCard image={shoe.get_thumbnail} name={shoe.name} price={shoe.price} />
+                <ShoesCard slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
               )
             })
           :
             shoes.map((shoe: ShoeCard) => {
               return(
-                <ShoesCard image={shoe.get_thumbnail} name={shoe.name} price={shoe.price} />
+                <ShoesCard slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
               )
             })
           }
