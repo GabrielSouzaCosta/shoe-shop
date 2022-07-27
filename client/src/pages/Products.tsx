@@ -10,6 +10,7 @@ import axios from 'axios'
 import ShoesCard from '../components/ShoesCard'
 
 type ShoeCard = {
+  id: number,
   name: string,
   slug: string,
   category: number,
@@ -39,9 +40,12 @@ function Products() {
   }
 
   useEffect(() => {
-    axios.get(import.meta.env.VITE_BACKEND_URL+'/shoes/')
-    .then(res => setShoes(res.data))
-    .then(res => console.log(shoes))  
+    const getProducts = async () => {
+      const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/shoes/')
+      const data = response.data
+      setShoes(data)
+    }
+    getProducts()
   }, [])
 
   return (
@@ -60,13 +64,13 @@ function Products() {
               shoe.category == filter
             ).map((shoe: ShoeCard) => {
               return(
-                <ShoesCard slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
+                <ShoesCard id={shoe.id} slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
               )
             })
           :
             shoes.map((shoe: ShoeCard) => {
               return(
-                <ShoesCard slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
+                <ShoesCard id={shoe.id} slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
               )
             })
           }

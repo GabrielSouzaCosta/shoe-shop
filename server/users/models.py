@@ -39,6 +39,7 @@ class User(AbstractUser):
     name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
     account_address = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

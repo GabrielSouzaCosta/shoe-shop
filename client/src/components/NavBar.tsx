@@ -7,8 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../utils/useAuth";
 import {authService } from '../utils/authService'
+import { useAppSelector } from "../redux/hooks/hooks";
 
-function NavBar() {
+function NavBar() { 
+  const cart = useAppSelector(state => state.cart.items)
 
   const user = useAuth()
 
@@ -30,13 +32,22 @@ function NavBar() {
             } >
             Store
           </NavLink>
-          <Nav className="ms-auto position-absolute end-0">
+          <Nav className="ms-auto position-absolute end-0 align-items-center">
             <NavLink to="/cart" className={({ isActive }) =>
-              isActive ? "text-danger pe-3 navlink-active" : "text-danger pe-3"
+              isActive ? "text-danger pe-3 navlink-active" : "text-danger pe-3 ps-1"
             } 
             >
-            <FontAwesomeIcon icon={faCartShopping} className="pe-2" />
-            Cart
+              <FontAwesomeIcon icon={faCartShopping} className="pe-2" />
+             
+              Cart
+              <span className='text-dark ms-1 bg-danger fw-bold rounded-circle px-2' >
+                {(cart) ? <>
+                  {cart.length}
+                </>
+                :
+                "0"
+                } 
+              </span>
             </NavLink>
             {(user.is_superuser) ? 
               <NavLink to="/administration" className="pe-2">

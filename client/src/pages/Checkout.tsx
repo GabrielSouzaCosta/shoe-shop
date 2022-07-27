@@ -2,11 +2,21 @@ import React, { useState } from 'react'
 import NavBar from '../components/NavBar'
 import { Button, Container, Form, ToggleButtonGroup } from 'react-bootstrap'
 import axios from 'axios'
+import { useAppSelector } from '../redux/hooks/hooks'
 
 function Checkout() {
+  const cart = useAppSelector(state => state.cart.items)
   const [zipcode, setZipcode] = useState<string>("")
   const [shippingDetails, setShippingDetails] = useState<any>([])
   const [shippingMethod, setShippingMethod] = useState<string>("")
+
+  function getTotal() {
+    var total = 0;
+    cart.forEach((item) => {
+      total += item.price * item.quantity
+    })
+    return total.toFixed(2)
+  }
 
   function calcularFrete(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -27,23 +37,30 @@ function Checkout() {
           Checkout
         </h1>
         <div className='d-flex'>
-          <div className='row h-100  mb-3'>
-            <div className='col-3'>
-              <img src="/images/maksim-larin-NOpsC3nWTzY-unsplash.jpg" className='img-fluid' />
-            </div>
-
-            <div className='col-4 align-self-center'>
-              <h2>
-                Adidas Ultrawide St 500
-              </h2>
-              <div className='fs-3'>
-                  Quantity: 2
-              </div>
-              <div className='fs-3'>
-                  $199.99
-              </div>
-            </div>
-
+          <div className='row h-100 mb-3'>
+            {cart?.map((item) => {
+              return (
+                <>
+                  <div className='col-3 mb-2'>
+                    <img src="/images/maksim-larin-NOpsC3nWTzY-unsplash.jpg" className='img-fluid' />
+                  </div>
+  
+                  <div className='col-7 align-self-center mb-2'>
+                    <h2>
+                      {item.name}
+                    </h2>
+                    <div className='fs-3'>
+                        Quantity: {item.quantity}
+                    </div>
+                    <div className='fs-3'>
+                        ${item.price}
+                    </div>
+                  </div>
+                </>
+              )
+            })
+            }
+           
             <div className='row mt-3'>
               <hr className='col-10' style={{border: "2px solid #000000"}}></hr>
             </div>
@@ -99,7 +116,7 @@ function Checkout() {
               <hr className='col-10' style={{border: "2px solid #000000"}}></hr>
             </div>
             <div className='fs-1'>
-              Total: $399.99
+              Total: ${getTotal()}
             </div>
           </div>
 

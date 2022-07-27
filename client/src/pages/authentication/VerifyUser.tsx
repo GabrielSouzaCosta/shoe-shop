@@ -28,7 +28,7 @@ function VerifyUser() {
         }
       )
       .catch(err => setMsg("Your link is invalid or your account was already verified."))
-    })  
+    }, [])  
   
     return (
       <div className='bg-dark text-center text-white'>

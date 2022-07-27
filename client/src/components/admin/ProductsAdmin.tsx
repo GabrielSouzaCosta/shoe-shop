@@ -26,7 +26,7 @@ function ProductsAdmin() {
         }
     })
     .then(res => setShoes(res.data))
-  })
+  }, [])
 
   async function handleRegisterProduct () {
     await axios.post(import.meta.env.VITE_BACKEND_URL+'/shoes/', {name, category, price, description}, {
