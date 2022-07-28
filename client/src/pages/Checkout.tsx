@@ -4,28 +4,59 @@ import { Button, Container, Form, ToggleButtonGroup } from 'react-bootstrap'
 import axios from 'axios'
 import { useAppSelector } from '../redux/hooks/hooks'
 
+interface Shipping {
+  Valor: number
+}
+
+type ShippingTypes = {
+  Valor: number
+}
+
+type ShippingMethod = {
+  method: string,
+  value: number
+}
+
 function Checkout() {
   const cart = useAppSelector(state => state.cart.items)
   const [zipcode, setZipcode] = useState<string>("")
-  const [shippingDetails, setShippingDetails] = useState<any>([])
-  const [shippingMethod, setShippingMethod] = useState<string>("")
+  const [shippingDetails, setShippingDetails] = useState<Shipping>([])
+  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>({
+    method: "",
+    value: 0
+  })
+  const [errorMsg, setErrorMsg] = useState<string>("")
 
+  console.log(typeof(shippingMethod.value))
   function getTotal() {
     var total = 0;
     cart.forEach((item) => {
       total += item.price * item.quantity
     })
-    return total.toFixed(2)
+    console.log(typeof(shippingMethod.value))
+    return total
   }
 
   function calcularFrete(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    axios.get(import.meta.env.VITE_BACKEND_URL+'/shipping-details/?zipcode='+zipcode, {
-      headers: {
-        'Authorization': 'Token '+sessionStorage.getItem('token')
-      }
-    }) 
-    .then(res => setShippingDetails([res.data.sedex, res.data.pac]))
+    zipcode.length === 9 ?
+      axios.get(import.meta.env.VITE_BACKEND_URL+'/shipping-details/?zipcode='+zipcode, {
+        headers: {
+          'Authorization': 'Token '+sessionStorage.getItem('token')
+        }
+      }) 
+      .then(res => setShippingDetails([res.data.sedex, res.data.pac]))
+      .then(() => setErrorMsg(""))
+    :
+      setErrorMsg("Invalid Zipcode, try again")
+  }
+
+  function handleZipcodeChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.currentTarget.value.length === 5) {
+      setZipcode(e.currentTarget.value+'-')
+    } else {
+      setZipcode(e.currentTarget.value)
+    }
   }
 
   return (
@@ -74,7 +105,7 @@ function Checkout() {
               </Form.Label>
               <Form.Control
                 value={zipcode}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setZipcode(e.currentTarget.value)}
+                onChange={handleZipcodeChange}
                 className='w-50 rounded-0 text-dark'
                 placeholder="00000-000"
                 required
@@ -84,14 +115,15 @@ function Checkout() {
               </Button>
             </Form>
               {(shippingDetails) ? 
-              shippingDetails.map((shipping:any, i:number) => {
+              shippingDetails.map((shipping:ShippingTypes, i:number) => {
+                let Valor = Number(shipping.Valor.split(',').join('.'))
                 return (
                   <div key={'shipping-'+shipping.Codigo} className='form-check row mt-3'>
                     <div className='py-1 title fs-5 bg-light border col-6'>
                       <input 
                       className="form-check-input ms-0" 
                       required value={i === 0 ? "SEDEX":"PAC"} 
-                      onChange={(e) => setShippingMethod(e.currentTarget.value)} 
+                      onChange={ (e) => setShippingMethod({method: e.currentTarget.value, value: Valor}) } 
                       type="radio" 
                       name="shippingMethod" 
                       />
@@ -105,7 +137,7 @@ function Checkout() {
               :
                 ""
               }
-
+            <div className='fs-5 text-danger ms-2 fw-bolder'>{errorMsg}</div>
 
             {(shippingDetails.MsgErro) ?
               <div className='mt-2 fs-5'>{shippingDetails.MsgErro}</div>
@@ -116,7 +148,7 @@ function Checkout() {
               <hr className='col-10' style={{border: "2px solid #000000"}}></hr>
             </div>
             <div className='fs-1'>
-              Total: ${getTotal()}
+              Total: ${getTotal().toFixed(2)} + ${shippingMethod.value.toFixed(2)}(shipping) = ${(getTotal() + shippingMethod.value).toFixed(2)}
             </div>
           </div>
 
@@ -127,21 +159,21 @@ function Checkout() {
                 </h2>
               <div className='d-flex flex-column'>
                 <div>
-                  <input type="radio" value="credit-card" name="payment-method" className='form-check-input' required/>
+                  <input type="radio" defaultChecked={true} value="credit-card" name="payment-method" className='form-check-input' required/>
                   <label className='ms-2' htmlFor='credit-card'>
                     Credit Card
                   </label>
                 </div>
 
                 <div>
-                  <input type="radio" value="credit-card" name="payment-method" className='form-check-input' />
+                  <input type="radio" value="paypal" name="payment-method" className='form-check-input' />
                   <label className='ms-2' htmlFor='boleto'>
                     Paypal
                   </label>
                 </div>
 
                 <div>
-                  <input type="radio" value="credit-card" name="payment-method" className='form-check-input ' />
+                  <input type="radio" value="boleto" name="payment-method" className='form-check-input ' />
                   <label className='ms-2' htmlFor='boleto'>
                     Boleto
                   </label>

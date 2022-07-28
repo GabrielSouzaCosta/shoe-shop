@@ -53,6 +53,32 @@ export const cartSlice = createSlice({
                 return {items: newData}
             }   
         },
+
+        incrementQuantity: (state, action: PayloadAction<number>) => {
+            let newData = [...state.items];
+            let index = newData.findIndex(item => {
+                return item.id === action.payload
+            });
+            let item = {...newData[index]};
+            item.quantity += 1;
+            newData[index] = item;
+            
+            localStorage.setItem('cart', JSON.stringify(newData));
+            return {items: newData};
+        },
+
+        decrementQuantity: (state, action: PayloadAction<number>) => {
+            let newData = [...state.items];
+            let index = newData.findIndex(item => {
+                return item.id === action.payload
+            });
+            let item = {...newData[index]};
+            item.quantity -= 1;
+            newData[index] = item;
+            
+            localStorage.setItem('cart', JSON.stringify(newData));
+            return {items: newData};
+        },
         
         removeProduct: (state, action: PayloadAction<number>) => {
             let newData = [...state.items.filter((item) => {
@@ -65,6 +91,6 @@ export const cartSlice = createSlice({
     }
 })
 
-export const { addToCart, removeProduct } = cartSlice.actions
+export const { addToCart, incrementQuantity, decrementQuantity, removeProduct } = cartSlice.actions
 
 export default cartSlice.reducer 

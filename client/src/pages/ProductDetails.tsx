@@ -4,10 +4,13 @@ import { Container, Carousel, InputGroup, Form, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
+import { useAppDispatch } from "../redux/hooks/hooks";
+import { addToCart } from "../redux/slices/CartSlice";
 
-type Shoe = {
+interface Shoe {
+  id: number,
   name: string,
-  price: string,
+  price: number,
   description: string,
   images: [{
     get_image: string
@@ -16,8 +19,33 @@ type Shoe = {
 }
 
 function ProductDetails() {
-  const [shoe, setShoe] = useState<Shoe>({})
+  const [shoe, setShoe] = useState<Shoe>({
+    id: 0,
+    name: "",
+    price: 0,
+    description: "",
+    images: [{
+      get_image: "",
+      get_thumbnail: "",
+    }]
+  })
+  const [quantity, setQuantity] = useState<number>(1)
+
   const params = useParams()
+  const dispatch = useAppDispatch()
+
+  function handleSetQuantity(value:number) {
+    if (value < 0 && quantity <= 1) {
+      setQuantity(quantity)
+    } else if (quantity < 15) {
+      setQuantity(quantity + value)
+    }
+  }
+
+  function handleAddToCart() {
+    dispatch(addToCart({id: shoe.id, name: shoe.name, price: shoe.price, quantity, image: shoe.images[0]?.get_thumbnail}))
+    setQuantity(1)
+  }
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_BACKEND_URL}/shoes/${params.slug}/`)
@@ -53,19 +81,20 @@ function ProductDetails() {
               <div className="row w-100 pt-4">
                 <span className="col-5 text-start">
                 <InputGroup className="rounded">
-                  <Button variant="dark" className="rounded fs-3" id="button-addon2" >
+                  <Button onClick={() => handleSetQuantity(-1)} variant="dark" className="rounded fs-3" id="button-addon2" >
                     -
                   </Button>
-                  <Form.Control
-                      defaultValue="1"
+                  <Form.Control style={{pointerEvents: "none"}}
+                      value={quantity}
+                      type="number"
                       className="text-center text-dark fs-3"
                   />
-                  <Button variant="dark" className="rounded fs-3" id="button-addon2">
+                  <Button onClick={() => handleSetQuantity(+1)} variant="dark" className="rounded fs-3" id="button-addon2">
                     +
                   </Button>
                 </InputGroup>
                 </span>
-                <Button variant="light" className="col-6 rounded fs-3 text-dark text-uppercase" id="button-addon2">
+                <Button onClick={handleAddToCart} variant="light" className="col-6 rounded fs-3 text-dark text-uppercase" id="button-addon2">
                       Add to Cart
                 </Button>
               </div>

@@ -27,7 +27,7 @@ function Home() {
               Premium Brands.
             </h3>
             <Button variant="light" className="rounded-pill px-4 fs-3 mx-auto fw-bold" onMouseEnter={() => setShowArrow(true)} >
-              <span className="pe-2">See our products</span>
+              <Link to="/shoes" className="text-dark pe-2">See our products</Link>
               {(showArrow) ? 
                 <span style={{verticalAlign: "middle"}}>
                   <FontAwesomeIcon id="arrow" className="slide-in-blurred-left" icon={ faAngleRight } />
@@ -132,7 +132,7 @@ function Home() {
               </h3>
             </div>
             <div className="category-card-1 px-0 col-6 m-1">
-              <h3 className="text-center pt-2 h-100 title fw-bold display-4 text-secondary">
+              <h3 className="text-center pt-2 h-75 title fw-bold display-4 text-secondary">
                 Heels
               </h3>
             </div>

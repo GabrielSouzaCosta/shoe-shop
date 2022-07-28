@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
 import { Button } from 'react-bootstrap'
 import { useAppDispatch } from '../redux/hooks/hooks'
-import { addToCart } from '../redux/slices/CartSlice'
+import { addToCart, incrementQuantity, decrementQuantity } from '../redux/slices/CartSlice'
 
 type Props = {
     id: number,
