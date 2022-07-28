@@ -30,7 +30,7 @@ const AuthCard = ({
   }: Props) =>
   
   (
-    <div className="card w-75 pb-3">
+    <div className="card col-11 col-md-8 col-lg-7 pb-3" style={{backgroundColor: "#ffffffee"}}>
           <h1 className="title text-center pt-4 text-dark display-2">
             {type}
           </h1>

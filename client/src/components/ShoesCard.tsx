@@ -30,7 +30,7 @@ const ShoesCard = ({
         }
 
     return (
-        <div className='shoes-card col-3 '>
+        <div className='shoes-card col-12 col-md-6 col-lg-3'>
             <div className='bg-light header' style={{background: `url('${'http://localhost:8000'+image}') no-repeat center`, backgroundSize: "auto 97%", minHeight: "400px"}}>
             </div>
             <div className='body text-center pb-2' style={{background: "#ffffff no-repeat bottom", minHeight: "15%"}}>

@@ -58,7 +58,7 @@ function Products() {
         <FontAwesomeIcon onClick={handleShowFilter} icon={ faFilter } className="bg-light w-100 position-absolute text-danger" style={{height: "40px"}} />
       }
       <Container className='h-100 mt-1' fluid>
-        <div className='row h-100 justify-content-center mx-auto py-5 position-relative' style={{width: "85%"}}>
+        <div className='row h-100 justify-content-center mx-auto py-5 position-relative'>
           {(filter !== 0) ?
             shoes.filter((shoe: ShoeCard) => 
               shoe.category == filter
