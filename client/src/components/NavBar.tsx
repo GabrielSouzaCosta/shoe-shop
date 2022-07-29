@@ -1,12 +1,8 @@
 import { faBars, faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
 import { Container, Navbar, Nav } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../utils/useAuth";
-import {authService } from '../utils/authService'
 import { useAppSelector } from "../redux/hooks/hooks";
 
 function NavBar() { 

@@ -18,7 +18,7 @@ export default function ForgotPassword() {
         "x-csrftoken": csrftoken
       }
     })
-    .then(res => {
+    .then(() => {
       setErrors("");
       setEmailSent(true);
     }

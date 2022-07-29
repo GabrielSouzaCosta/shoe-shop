@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import NavBar from '../components/NavBar'
-import { Button, Container, Form, ToggleButtonGroup } from 'react-bootstrap'
+import { Button, Container, Form } from 'react-bootstrap'
 import axios from 'axios'
 import { useAppSelector } from '../redux/hooks/hooks'
 
@@ -9,7 +9,8 @@ interface Shipping {
 }
 
 type ShippingTypes = {
-  Valor: number
+  Codigo: number
+  Valor: string
 }
 
 type ShippingMethod = {
@@ -27,13 +28,11 @@ function Checkout() {
   })
   const [errorMsg, setErrorMsg] = useState<string>("")
 
-  console.log(typeof(shippingMethod.value))
   function getTotal() {
-    var total = 0;
+    let total = 0;
     cart.forEach((item) => {
       total += item.price * item.quantity
     })
-    console.log(typeof(shippingMethod.value))
     return total
   }
 
@@ -72,11 +71,11 @@ function Checkout() {
             {cart?.map((item) => {
               return (
                 <>
-                  <div className='col-3 mb-2'>
-                    <img src="/images/maksim-larin-NOpsC3nWTzY-unsplash.jpg" className='img-fluid' />
+                  <div key={item.name+'col-1'} className='col-3 mb-2'>
+                    <img src={import.meta.env.VITE_BACKEND_URL_BASE+item.image} className='img-fluid' />
                   </div>
   
-                  <div className='col-7 align-self-center mb-2'>
+                  <div key={item.name+'col-2'} className='col-7 align-self-center mb-2'>
                     <h2>
                       {item.name}
                     </h2>
@@ -116,7 +115,7 @@ function Checkout() {
             </Form>
               {(shippingDetails) ? 
               shippingDetails.map((shipping:ShippingTypes, i:number) => {
-                let Valor = Number(shipping.Valor.split(',').join('.'))
+                const Valor = Number(shipping.Valor.split(',').join('.'))
                 return (
                   <div key={'shipping-'+shipping.Codigo} className='form-check row mt-3'>
                     <div className='py-1 title fs-5 bg-light border col-6'>

@@ -1,8 +1,6 @@
 import { Button, Form } from "react-bootstrap"
 import { Link } from "react-router-dom"
 
-import { useNavigate } from 'react-router-dom'
-
 type Props = {
   type: string,
   email: string,

@@ -24,10 +24,10 @@ function RegisterPage() {
 
   async function handleRegister() {
     authService.register(email, password, rePassword)
-    .then((res: any) => {
+    .then(() => {
       navigate('/register-successful/');
     })
-    .catch((err: any) => setMsg(Object.values<[]>(err.response.data)[0]))
+    .catch((err) => setMsg(Object.values<[]>(err.response.data)[0]))
     console.log(msg)
   }
   

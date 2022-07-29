@@ -1,7 +1,7 @@
 import { faEllipsisVertical, faHome, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
-import { Button, Container, Form, Nav } from 'react-bootstrap'
+import { Container, Nav } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import NavBar from '../components/NavBar'
 import ProductsAdmin from '../components/admin/ProductsAdmin'

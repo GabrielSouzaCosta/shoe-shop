@@ -6,7 +6,7 @@ import getCookie from '../../utils/getCookie';
 function VerifyUser() {
     const [msg, setMsg] = useState("");
     const csrftoken = getCookie('csrftoken');
-    let [searchParams, setSearchParams] = useSearchParams();
+    const searchParams = useSearchParams();
   
     useEffect(() => {
       axios.post(`${import.meta.env.VITE_BACKEND_URL}/accounts/verify-registration/`, 
@@ -27,7 +27,7 @@ function VerifyUser() {
           }
         }
       )
-      .catch(err => setMsg("Your link is invalid or your account was already verified."))
+      .catch(() => setMsg("Your link is invalid or your account was already verified."))
     }, [])  
   
     return (

@@ -1,3 +1,4 @@
+from tkinter import image_names
 from rest_framework import serializers
 
 from .models import Product, Images
@@ -11,10 +12,10 @@ class ImagesSerializer(serializers.ModelSerializer):
     )
 
 class ProductsSerializer(serializers.ModelSerializer):
-  images = ImagesSerializer(many=True)
+  images = ImagesSerializer(many=True, read_only=True)
 
   class Meta:
-    model = Product
+    model = Product 
     fields = (
       'id',
       'name',
@@ -26,3 +27,12 @@ class ProductsSerializer(serializers.ModelSerializer):
       'images'
     )
     lookup_field = 'slug'
+
+  def create(self, validated_data):
+      images_data = self.context.get('request').FILES.getlist('file')
+      product = Product.objects.create(**validated_data)
+      for i, image_data in enumerate(images_data):
+        Images.objects.create(title=validated_data['name'], image=image_data, product=product)
+      return product
+
+    

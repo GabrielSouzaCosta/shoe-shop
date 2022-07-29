@@ -2,7 +2,6 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import AuthCard from "../../components/AuthCard"
 import { authService }from '../../utils/authService'
-import { useAuth } from "../../utils/useAuth"
 
 function LoginPage() {
   const [email, setEmail] = useState<string>("")
@@ -20,12 +19,11 @@ function LoginPage() {
 
   async function handleLogin() {
     authService.login(email, password)
-    .then((res: any) => {
+    .then((res) => {
       sessionStorage.setItem('token', res.data.token);
       navigate('/');
     })
-    .catch((err: any) => setMsg(Object.values<[]>(err.response.data)[0]))
-    console.log(msg)
+    .catch((err) => setMsg(Object.values<[]>(err.response.data)[0]))
   }
 
   return (

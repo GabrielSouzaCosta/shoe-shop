@@ -44,7 +44,7 @@ class Product(models.Model):
 class Images(models.Model):
   title = models.CharField(max_length=200)
   product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-  image = models.ImageField(upload_to=upload_image_to)
+  image = models.ImageField(upload_to=upload_image_to, blank=True, null=True)
   thumbnail = models.ImageField(upload_to=upload_image_to, blank=True, null=True)
 
   def __str__(self):

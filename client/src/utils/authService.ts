@@ -1,5 +1,4 @@
-import axios from 'axios'
-
+import axios, { AxiosResponse }  from 'axios'
 
 type User = {
   id: number,
@@ -12,11 +11,11 @@ type GetUsersResponse = {
 };
 
 const login = async (email: string, password: string) => {
-  return await axios.post(import.meta.env.VITE_BACKEND_URL+'/accounts/login/', {"login":email, "password":password})
+  return await axios.post<AxiosResponse>(import.meta.env.VITE_BACKEND_URL+'/accounts/login/', {"login":email, "password":password})
 }
 
 const register = async (email: string, password: string, rePassword: string) => {
-  return await axios.post(import.meta.env.VITE_BACKEND_URL+'/accounts/register/', {email, password, "password_confirm": rePassword})
+  return await axios.post<AxiosResponse>(import.meta.env.VITE_BACKEND_URL+'/accounts/register/', {email, password, "password_confirm": rePassword})
 }
 
 function profile () {

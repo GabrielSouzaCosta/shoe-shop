@@ -7,17 +7,20 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks/hooks'
 import { removeProduct, incrementQuantity, decrementQuantity } from '../redux/slices/CartSlice'
 import { useEffect, useState } from 'react'
 
+type CartItem = {
+  price: number,
+  quantity: number
+}
 
 function Cart() {
   const [total, setTotal] = useState<number>(0)
   const cart = useAppSelector(state => state.cart.items)
   const dispatch = useAppDispatch()
-  console.log(cart)
 
   function getTotal() {
-    var newTotal = 0
-    cart.forEach((item:any) => {
-        newTotal += item.price * item.quantity
+    let newTotal = 0
+    cart.forEach((item) => {
+      newTotal += item.price * item.quantity
     })
     setTotal(newTotal)
   }
@@ -62,14 +65,14 @@ function Cart() {
                   <div className='row w-100 justify-content-center text-center  pt-3 text-uppercase border-danger'>
                     <div className='col-lg-4'>
                       <InputGroup className="rounded">
-                        <Button onClick={(e) => dispatch(decrementQuantity(item.id))} variant="primary" className="rounded fs-3 fw-bold px-3" id="button-addon2" >
+                        <Button onClick={() => dispatch(decrementQuantity(item.id))} variant="primary" className="rounded fs-3 fw-bold px-3" id="button-addon2" >
                           -
                         </Button>
                         <Form.Control
                             value={item.quantity}
                             className="text-center text-dark fs-3"
                         />
-                        <Button onClick={(e) => dispatch(incrementQuantity(item.id))} variant="primary" className="rounded fs-3 fw-bold" id="button-addon2">
+                        <Button onClick={() => dispatch(incrementQuantity(item.id))} variant="primary" className="rounded fs-3 fw-bold" id="button-addon2">
                           +
                         </Button>
                       </InputGroup>
@@ -81,7 +84,7 @@ function Cart() {
                       ${(item.price * item.quantity).toFixed(2)}
                     </div>
                     <div className='col-1'>
-                      <Button onClick={(e) => dispatch(removeProduct(item.id))} variant='danger'>
+                      <Button onClick={() => dispatch(removeProduct(item.id))} variant='danger'>
                         X
                       </Button>
                     </div>

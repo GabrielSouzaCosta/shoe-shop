@@ -1,7 +1,10 @@
+from multiprocessing import context
+from unicodedata import name
 from django.shortcuts import get_object_or_404
 from rest_framework.views import Response, APIView
 from rest_framework.permissions import IsAdminUser, AllowAny
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from .models import Category, Product
 from .serializers import ProductsSerializer
 from .scripts import get_shipping
@@ -9,6 +12,7 @@ from .scripts import get_shipping
 class ProductsListView(viewsets.ViewSet):
   serializer_class = ProductsSerializer
   permission_classes = [IsAdminUser]
+  parser_classes = (MultiPartParser, FormParser, FileUploadParser)                                                
   lookup_field = 'slug'
 
   def get_queryset(self):
@@ -19,16 +23,36 @@ class ProductsListView(viewsets.ViewSet):
     queryset = Product.objects.all()
     return queryset
 
-  def list(self, request):
+  def list(self, request, *args, **kwargs):
     queryset = self.get_queryset()
     serializer = ProductsSerializer(queryset, many=True)
     return Response(serializer.data)
 
   def retrieve(self, request, slug):
-        queryset = Product.objects.all()
-        product = get_object_or_404(queryset, slug=slug)
-        serializer = ProductsSerializer(product)
-        return Response(serializer.data)
+    queryset = Product.objects.all()
+    product = get_object_or_404(queryset, slug=slug)
+    serializer = ProductsSerializer(product)
+    return Response(serializer.data)
+
+  def create(self, request, *args, **kwargs):
+    serializer = self.serializer_class(data=request.data, context={'request': request})
+    if serializer.is_valid():
+      serializer.save()
+      return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+    else:
+      return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+  def perform_create(self, serializer):
+    serializer.save(product=self.request.data)
+
+  def get_object(self, slug):
+    product = Product.objects.get(slug=slug)
+    return product
+
+  def destroy(self, request, slug):
+    product = self.get_object(slug)
+    product.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
   def get_permissions(self):
         if self.request.method == 'POST':

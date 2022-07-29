@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
-import { Button, Container } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import Filter from '../components/Filter'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartPlus, faFilter } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
+import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import ShoesCard from '../components/ShoesCard'
 
@@ -34,7 +33,7 @@ function Products() {
     setFilter(e.currentTarget.value)
   }
 
-  function handleClearFilter(e: React.MouseEvent<HTMLButtonElement>) {
+  function handleClearFilter() {
     setFilter(0),
     setShowFilter(!showFilter);
   }
