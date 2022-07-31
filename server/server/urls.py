@@ -7,6 +7,7 @@ urlpatterns = [
     path('api/v1/', include('rest_framework.urls')),
     path('api/v1/', include('users.urls')),
     path('api/v1/', include('products.urls')),
+    path('api/v1/', include('orders.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

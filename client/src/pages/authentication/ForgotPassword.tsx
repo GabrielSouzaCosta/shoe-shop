@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse, HeadersDefaults } from 'axios';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import NavBar from '../../components/NavBar';
@@ -11,7 +11,7 @@ export default function ForgotPassword() {
   const [errors, setErrors] = useState("");
   const csrftoken = getCookie('csrftoken');
 
-  function handleSubmit(email:string) {
+  function handleSubmit(email: string) {
     setIsLoading(true)
     axios.post(`${import.meta.env.VITE_BACKEND_URL}/accounts/send-reset-password-link/`, {login: email}, {
       headers: {

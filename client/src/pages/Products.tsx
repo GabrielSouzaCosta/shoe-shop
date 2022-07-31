@@ -30,7 +30,7 @@ function Products() {
   }
 
   function handleFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setFilter(e.currentTarget.value)
+    setFilter(Number(e.currentTarget.value))
   }
 
   function handleClearFilter() {
