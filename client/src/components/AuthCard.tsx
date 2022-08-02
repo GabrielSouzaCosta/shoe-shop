@@ -26,7 +26,7 @@ const AuthCard = ({
   handleLogin,
   handleRegister
   }: Props) =>
-  
+
   (
     <div className="card col-11 col-md-8 col-lg-7 pb-3" style={{backgroundColor: "#ffffffee"}}>
           <h1 className="title text-center pt-4 text-dark display-2">

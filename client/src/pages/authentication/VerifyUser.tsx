@@ -6,7 +6,7 @@ import getCookie from '../../utils/getCookie';
 function VerifyUser() {
     const [msg, setMsg] = useState("");
     const csrftoken = getCookie('csrftoken');
-    const searchParams = useSearchParams();
+    const [searchParams] = useSearchParams();
   
     useEffect(() => {
       axios.post(`${import.meta.env.VITE_BACKEND_URL}/accounts/verify-registration/`, 

@@ -137,7 +137,7 @@ function ProductsAdmin() {
           className="text-dark"
           accept="image/*" 
           multiple 
-          onChange={(e) => {if (e.target.files.length < 4) {
+          onChange={(e: any) => {if (e.currentTarget.files.length < 4) {
             handleUploadChange(e);
           } else if (e.target.files.length > 3) {
             window.alert("Por favor selecione até 3 imagens")

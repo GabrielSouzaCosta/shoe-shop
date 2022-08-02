@@ -18,12 +18,14 @@ function LoginPage() {
   }
 
   async function handleLogin() {
-    authService.login(email, password)
-    .then((res) => {
-      sessionStorage.setItem('token', res.data.token);
-      navigate('/');
-    })
-    .catch((err) => setMsg(Object.values<[]>(err.response.data)[0]))
+    setTimeout(() => {
+      authService.login(email, password)
+      .then((res: any) => {
+        sessionStorage.setItem('token', res.data.token);
+        navigate('/');
+      })
+      .catch((err) => setMsg(Object.values<[]>(err.response.data)[0]))
+    }, 2000)
   }
 
   return (

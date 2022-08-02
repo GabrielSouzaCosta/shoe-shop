@@ -3,12 +3,32 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
+from rest_framework.views import Response
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 from django.core.mail import send_mail
 
 from paypalrestsdk import notifications 
 import json
 from pprint import pprint
+from .scripts import pagseguro_credit_card_request, pagseguro_boleto_payment
 
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication,])
+@permission_classes([IsAuthenticated,])
+def credit_card_payment(request):
+    response = pagseguro_credit_card_request("nike shock", 2000, request.data['name'], request.data['month'], request.data['year'], request.data['ccv'])
+    pprint(response)
+    return Response(response)
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication,])
+@permission_classes([IsAuthenticated,])
+def boleto_payment(request):
+    response = pagseguro_boleto_payment("nike shock", 2000, request.data['name'])
+    pprint(response)
+    return Response(response)
 
 @method_decorator(csrf_exempt, name="dispatch")
 class ProcessWebhookView(View):

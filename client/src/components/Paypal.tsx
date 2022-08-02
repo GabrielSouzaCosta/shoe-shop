@@ -13,6 +13,9 @@ function Paypal({
 }: Props) {
   return (
     <div>
+        <h2 className='mb-3 text-center'>
+            A new window will open to proceed with the payment
+        </h2>
         <PayPalButtons 
         style={{ layout: "horizontal" }}
         createOrder={(data, actions) => {

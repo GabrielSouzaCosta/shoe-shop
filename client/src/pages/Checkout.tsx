@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import NavBar from '../components/NavBar'
-import { Button, Container, Form } from 'react-bootstrap'
+import { Button, Container, Form, Spinner } from 'react-bootstrap'
 import axios, { AxiosResponse } from 'axios'
 import { useAppSelector } from '../redux/hooks/hooks'
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import Paypal from '../components/Paypal'
 import { Toaster } from 'react-hot-toast';
+import CreditCard from '../components/CreditCard'
+import Boleto from '../components/Boleto'
 
 type ShippingTypes = {
   Codigo?: number
@@ -35,12 +37,23 @@ interface ShippingResponse extends AxiosResponse {
 function Checkout() {
   const cart = useAppSelector(state => state.cart.items)
   const [zipcode, setZipcode] = useState<string>("")
-  const [shippingDetails, setShippingDetails] = useState<ShippingTypes[]>([{}])
+  const [shippingDetails, setShippingDetails] = useState<ShippingTypes[]>([])
   const [shippingMethod, setShippingMethod] = useState<ShippingMethod>({
     method: "",
     value: 0
   })
   const [errorMsg, setErrorMsg] = useState<string>("")
+  const [paymentMethod, setPaymentMethod] = useState<number>(0)
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const paymentMethods = [
+    <CreditCard />,
+    <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID, currency: "BRL" }}>
+      <Toaster />
+      <Paypal quantity={cart.length} value={"100.00"}/>
+    </PayPalScriptProvider>,
+    <Boleto />
+  ]
 
   function getTotal() {
     let total = 0;
@@ -50,18 +63,24 @@ function Checkout() {
     return total
   }
 
-  function calcularFrete(e: React.FormEvent<HTMLFormElement>) {
+  async function calcularFrete(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    zipcode.length === 9 ?
-      axios.get<ShippingResponse>(import.meta.env.VITE_BACKEND_URL+'/shipping-details/?zipcode='+zipcode, {
+    if (zipcode.length === 9) {
+      setLoading(true)
+      await axios.get<ShippingResponse>(import.meta.env.VITE_BACKEND_URL+'/shipping-details/?zipcode='+zipcode, {
         headers: {
           'Authorization': 'Token '+sessionStorage.getItem('token')
         }
       }) 
-      .then(res => setShippingDetails([res.data.sedex, res.data.pac]))
-      .then(() => setErrorMsg(""))
-    :
+      .then(res => {
+        setShippingDetails([res.data.sedex, res.data.pac]),
+        setErrorMsg("")
+      })
+      .catch(err => console.log(err.response.data))
+      setLoading(false)
+    } else {
       setErrorMsg("Invalid Zipcode, try again")
+    }
   }
 
   function handleZipcodeChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -112,27 +131,35 @@ function Checkout() {
               Shipping
             </h2>
  
-            <Form onSubmit={calcularFrete} className="row align-items-center me-auto" >
-              <Form.Label className='col-4 col-md-auto fs-5 mx-1 pe-1 mb-2'>
+            <Form onSubmit={calcularFrete} className="row align-items-center" >
+              <Form.Label className='col-auto fs-5 mx-1 pe-1 mb-2'>
                 Zipcode:
               </Form.Label>
-              <Form.Control
-                value={zipcode}
-                onChange={handleZipcodeChange}
-                className='w-0 col-6 col-md-2 col-lg-1 border-0 rounded-pill text-dark mb-2'
-                placeholder="00000-000"
-                required
-              />
-              <Button type="submit" className='col-6 col-md-2 col-lg-1 ms-2 mb-md-2 rounded title fw-bold fs-5 p-1 px-2'>
-                SUBMIT
+              <div className='col-md-4 px-0 col-lg-2'>
+                <Form.Control
+                  value={zipcode}
+                  onChange={handleZipcodeChange}
+                  className='border-0 rounded-pill text-dark mb-2'
+                  placeholder="00000-000"
+                  required
+                />
+              </div>
+              
+              {loading ? 
+              <Spinner animation="border" role="status" className='ms-2 mb-md-2' /> 
+              : 
+              <Button className='col-auto ms-2 mb-md-2 rounded title fw-bold fs-5 p-1 px-2'>
+              SUBMIT
               </Button>
+              }
+              
             </Form>
-              {(shippingDetails) ? 
+              {(Object.keys(shippingDetails).length > 0) ? 
               shippingDetails.map((shipping:ShippingTypes, i:number) => {
                 const valor = Number(shipping.Valor?.split(',').join('.'))
                 return (
                   <div key={'shipping-'+shipping.Codigo} className='form-check row mt-3'>
-                    <div className='py-1 title fs-5 bg-light border col-6'>
+                    <div className='py-1 title fs-5 bg-light border col-5'>
                       <input 
                       className="form-check-input ms-0" 
                       required value={i === 0 ? "SEDEX":"PAC"} 
@@ -152,7 +179,7 @@ function Checkout() {
               }
             <div className='fs-5 text-danger ms-2 fw-bolder'>{errorMsg}</div>
 
-            {(shippingDetails[0].MsgErro) ?
+            {(shippingDetails[0]) ?
               <div className='mt-2 fs-5'>{shippingDetails[0].MsgErro}</div>
             :
               ""
@@ -164,28 +191,28 @@ function Checkout() {
               Total: ${getTotal().toFixed(2)} + ${shippingMethod.value.toFixed(2)}(shipping) = ${(getTotal() + shippingMethod.value).toFixed(2)}
             </div>
           </div>
-          <div className='fs-2 col-5 py-4 justify-content-center mx-auto' >
-              <div className='card p-4 bg-light h-100 w-100 position-relative' style={{bottom: "12%"}}>
+          <div className='fs-2 col-12 col-md-10 col-lg-5 py-4 justify-content-center mx-auto' style={{minHeight: "700px"}} >
+              <div className='card p-4 bg-light'>
                 <h2 className='title fw-bold text-center fs-1'>
                   Payment
                 </h2>
-              <div className='d-flex flex-column'>
+              <div className='d-flex flex-column' onChange={(e: ChangeEvent<HTMLInputElement>) => setPaymentMethod(Number(e.target.value))}>
                 <div>
-                  <input type="radio" defaultChecked={true} value="credit-card" name="payment-method" className='form-check-input' required/>
+                  <input type="radio" defaultChecked value={0} name="payment-method" className='form-check-input' required/>
                   <label className='ms-2' htmlFor='credit-card'>
                     Credit Card
                   </label>
                 </div>
 
                 <div>
-                  <input type="radio" value="paypal" name="payment-method" className='form-check-input' />
-                  <label className='ms-2' htmlFor='boleto'>
+                  <input type="radio" value={1} name="payment-method" className='form-check-input' />
+                  <label className='ms-2' htmlFor='paypal'>
                     Paypal
                   </label>
                 </div>
 
                 <div>
-                  <input type="radio" value="boleto" name="payment-method" className='form-check-input ' />
+                  <input type="radio" value={2} name="payment-method" className='form-check-input ' />
                   <label className='ms-2' htmlFor='boleto'>
                     Boleto
                   </label>
@@ -193,40 +220,7 @@ function Checkout() {
 
               </div>
               <hr></hr>
-              <div className="row px-4 mb-2">
-                <div className="col-12">
-                  <Form.Label className='mb-0 mt-3'>
-                    Name on Card
-                  </Form.Label>
-                  <Form.Control />
-                </div>
-                <div className="col-12">
-                  <Form.Label className='mb-0 mt-3'>
-                    Card Number
-                  </Form.Label>
-                  <Form.Control />
-                </div>
-                <div className='col-6'>
-                  <Form.Label className='mb-0 mt-3'>
-                    Expire Date
-                  </Form.Label>
-                  <Form.Control />
-                </div>
-                <div className="col-6">
-                  <Form.Label className='mb-0 mt-3'>
-                    CCV
-                  </Form.Label>
-                  <Form.Control />
-                </div>
-                <Button variant="dark" className="col-6 mt-4 text-center mx-auto text-uppercase fs-3 title rounded">
-                  Confirm Order
-                </Button>
-              </div>
-              <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID, currency: "BRL" }}>
-                <Toaster />
-                <Paypal quantity={cart.length} value={"100.00"}/>
-              </PayPalScriptProvider>
-
+              {paymentMethods[paymentMethod]}
               </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Container, Carousel, InputGroup, Form, Button } from "react-bootstrap";
+import { Container, Carousel, InputGroup, Form, Button, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
@@ -65,8 +65,8 @@ function ProductDetails() {
               <Carousel className="col-12 py-2" interval={null}>
                 {shoe?.images?.map((item) => {
                   return (
-                    <Carousel.Item className="w-100 text-center my-5">
-                      <img src={import.meta.env.VITE_BACKEND_URL_BASE+item.get_image} className="shadow-dark" style={{maxHeight: "600px"}}/>
+                    <Carousel.Item className="px-3 px-lg-0 text-center my-5">
+                      <img src={import.meta.env.VITE_BACKEND_URL_BASE+item.get_image} className="shadow-dark img-fluid" style={{minWidth: "300px", maxHeight: "600px"}}/>
                     </Carousel.Item>
                   )
                 })}
@@ -76,10 +76,26 @@ function ProductDetails() {
               <span className="display-6">Sneakers</span>
               <h1 className="display-1 text-light title ">{shoe.name}</h1>
               <h2 >{shoe.description}</h2>
-              <span className="col-4 fw-normal text-light display-5 me-3">
+              <span className="col-4 fw-normal text-light display-5 me-0 me-lg-3">
                 ${shoe.price}
               </span>
-              <div className="row w-100 pt-4 justify-content-center">
+              <Form onClick={(e) => {e.preventDefault(); handleAddToCart}} className="row pt-4 justify-content-center">
+                <div className="col-8 col-lg-2 text-center mx-auto">
+                  <Form.Select className="text-dark text-center" aria-label="Default select example" required>
+                    <option value="1">36</option>
+                    <option value="1">40</option>
+                    <option value="1">40</option>
+                    <option value="2">42</option>
+                    <option value="3">44</option>
+                  </Form.Select>
+                </div>
+                <div className="row justify-content-center py-3">
+                  <input className="form-check-input bg-dark rounded-circle me-3 col-3 border-0" type="radio" value="black" aria-label="black" style={{width:"30px", height: "30px"}} />
+                  <input className="form-check-input bg-white rounded-circle me-3 col-3 border-0" type="radio" value="white" aria-label="white" style={{width:"30px", height: "30px"}} />
+                  <input className="form-check-input bg-danger rounded-circle me-3 col-2 border-0" type="radio" value="danger" aria-label="danger" style={{width:"30px", height: "30px"}} />
+                  <input className="form-check-input bg-warning rounded-circle col-2 border-0" type="radio" value="warning" aria-label="warning" style={{width:"30px", height: "30px"}} />
+                </div>
+
                 <span className="col-8 col-md-6 col-lg-4 text-start">
                 <InputGroup className="rounded">
                   <Button onClick={() => handleSetQuantity(-1)} variant="dark" className="rounded fs-3" id="button-addon2" >
@@ -95,10 +111,10 @@ function ProductDetails() {
                   </Button>
                 </InputGroup>
                 </span>
-                <Button onClick={handleAddToCart} variant="light" className="col-4 rounded fs-3 text-dark text-uppercase" id="button-addon2">
-                      <FontAwesomeIcon icon={faCartPlus} />
+                <Button type="submit" variant="light" className="col-4 rounded fs-3 text-dark text-uppercase" id="button-addon2">
+                  <FontAwesomeIcon icon={faCartPlus} />
                 </Button>
-              </div>
+              </Form>
             </div>
 
             <h3 className="text-center text-dark text-uppercase display-3 pt-5 mt-5" style={{fontWeight: "400"}}>You May Also Like</h3>

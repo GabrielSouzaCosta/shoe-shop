@@ -13,7 +13,7 @@ export default function ForgotPassword() {
 
   function handleSubmit(email: string) {
     setIsLoading(true)
-    axios.post(`${import.meta.env.VITE_BACKEND_URL}/accounts/send-reset-password-link/`, {login: email}, {
+    axios.post<AxiosResponse>(`${import.meta.env.VITE_BACKEND_URL}/accounts/send-reset-password-link/`, {login: email}, {
       headers: {
         "x-csrftoken": csrftoken
       }
@@ -23,7 +23,7 @@ export default function ForgotPassword() {
       setEmailSent(true);
     }
     )
-    .catch(err => {
+    .catch((err: {response: {data: string}}) => {
       setErrors(Object.values(err.response.data)[0]);
       setIsLoading(false);
     } 
