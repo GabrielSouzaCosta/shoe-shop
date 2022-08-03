@@ -6,10 +6,6 @@ type User = {
   first_name: string
 }
 
-type GetUsersResponse = {
-  data: User[];
-};
-
 const login = async (email: string, password: string) => {
   return await axios.post<AxiosResponse>(import.meta.env.VITE_BACKEND_URL+'/accounts/login/', {"login":email, "password":password})
 }
@@ -20,8 +16,7 @@ const register = async (email: string, password: string, rePassword: string) => 
 
 function profile () {
   try {
-    // 👇️ const data: GetUsersResponse
-    return axios.get<GetUsersResponse>(
+    return axios.get(
       import.meta.env.VITE_BACKEND_URL+'/accounts/profile/',
         {
         headers: {

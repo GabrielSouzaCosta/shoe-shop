@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import ShoesCard from '../components/ShoesCard'
+import { Toaster } from 'react-hot-toast'
 
 type ShoeCard = {
   id: number,
@@ -75,6 +76,10 @@ function Products() {
           }
         </div>
       </Container>
+      <Toaster   
+      position="bottom-right"
+      reverseOrder={false}
+      />
     </div>
     <Footer />
   </>

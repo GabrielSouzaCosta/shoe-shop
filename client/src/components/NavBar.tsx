@@ -7,7 +7,6 @@ import { useAppSelector } from "../redux/hooks/hooks";
 
 function NavBar() { 
   const cart = useAppSelector(state => state.cart.items)
-
   const user = useAuth()
 
   function handleLogout() {
@@ -54,7 +53,7 @@ function NavBar() {
           {(user.is_superuser) ? 
             <NavLink to="/administration" className="d-none d-md-block pe-2">
               Admin
-            </NavLink>
+            </NavLink>  
           :
           ""
         }

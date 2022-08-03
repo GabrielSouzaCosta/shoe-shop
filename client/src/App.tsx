@@ -12,8 +12,11 @@ import VerifyUser from "./pages/authentication/VerifyUser";
 import RegisterSuccessful from "./pages/authentication/RegisterSuccessful";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
 import EditProduct from "./components/admin/EditProduct";
+import { useAuth } from "./utils/useAuth";
+
 
 function App() {
+  const user = useAuth()
 
   return (
     <BrowserRouter>
@@ -27,9 +30,9 @@ function App() {
           <Route path="/register-successful" element={ <RegisterSuccessful /> } />  
           <Route path="/verify-user" element={ <VerifyUser /> } />
           <Route path='/cart' element={ <Cart /> } />
-          <Route path='/checkout' element={ <Checkout /> } />
-          <Route path='/administration' element={ <Admin /> } />
-          <Route path='/administration/edit-product/:slug' element={ <EditProduct /> } />
+          <Route path='/checkout' element={user.id? <Checkout /> : <Navigate to='/login' /> } />
+          <Route path='/administration' element={user.is_superuser?  <Admin />: <Navigate to='/' /> } />
+          <Route path='/administration/edit-product/:slug' element={user.is_superuser? <EditProduct/> : <Navigate to='/' /> } />
       </Routes>
     </BrowserRouter>
   )

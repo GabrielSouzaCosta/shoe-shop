@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Spinner } from 'react-bootstrap'
 
 type Props = {
     handleSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void,
@@ -27,9 +28,9 @@ function SendEmailForm({
           <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="email" className='form-control w-50 text-dark' placeholder='e.g., bestbakeryinworld@gmail.com...'/>
         </div>
         {(isLoading === false) ?
-          <button onClick={handleSubmit(email)} className="btn btn-secondary mt-2 text-uppercase fs-4" style={{borderRadius: "30px"}}>Submit</button>
+          <button onClick={() => handleSubmit(email)} className="btn btn-secondary mt-2 text-uppercase fs-4" style={{borderRadius: "30px"}}>Submit</button>
         :
-          <button className="btn btn-secondary mt-2 text-uppercase fs-4" style={{borderRadius: "30px"}}>Sending email...</button>
+          <Spinner animation="border" role="status" className='mb-2 mt-2' /> 
         }
       </section>
     </>

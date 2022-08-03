@@ -1,9 +1,10 @@
-import { faCartPlus } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faCartPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
 import { Button } from 'react-bootstrap'
 import { useAppDispatch } from '../redux/hooks/hooks'
 import { addToCart } from '../redux/slices/CartSlice'
+import toast from 'react-hot-toast'
 
 type Props = {
     id: number,
@@ -27,6 +28,14 @@ const ShoesCard = ({
 
     function addProductToCart() {
         dispatch(addToCart({id, name, price, quantity: 1, image}))
+        toast.success(() => (
+            <span>
+              {name} added to cart
+              <Link to='/cart' className='text-danger ms-2 fw-bold'>
+                <FontAwesomeIcon icon={faArrowRight} />
+              </Link>
+            </span>
+          ))
         }
 
     return (

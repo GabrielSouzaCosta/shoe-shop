@@ -1,4 +1,4 @@
-import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCartPlus, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -8,6 +8,8 @@ import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 import { useAppDispatch } from "../redux/hooks/hooks";
 import { addToCart } from "../redux/slices/CartSlice";
+import toast, { Toaster } from 'react-hot-toast'
+import { Link } from 'react-router-dom'
 
 interface Shoe {
   id: number,
@@ -33,7 +35,7 @@ function ProductDetails() {
   })
   const [quantity, setQuantity] = useState<number>(1)
 
-  const params = useParams()
+  const { slug } = useParams()
   const dispatch = useAppDispatch()
 
   function handleSetQuantity(value:number) {
@@ -47,10 +49,18 @@ function ProductDetails() {
   function handleAddToCart() {
     dispatch(addToCart({id: shoe.id, name: shoe.name, price: shoe.price, quantity, image: shoe.images[0]?.get_thumbnail}))
     setQuantity(1)
+    toast.success(() => (
+      <span>
+        {shoe.name} added to cart
+        <Link to='/cart' className='text-danger ms-2 fw-bold'>
+          <FontAwesomeIcon icon={faArrowRight} />
+        </Link>
+      </span>
+    ))
   }
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/shoes/${params.slug}/`)
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/shoes/${slug}/`)
     .then(res => setShoe(res.data))
   }, [])
 
@@ -110,7 +120,7 @@ function ProductDetails() {
                   </Button>
                 </InputGroup>
                 </span>
-                <Button type="submit" variant="light" className="col-4 rounded fs-3 text-dark text-uppercase" id="button-addon2">
+                <Button type="submit" variant="light" onClick={handleAddToCart} className="col-4 rounded fs-3 text-dark text-uppercase" id="button-addon2">
                   <FontAwesomeIcon icon={faCartPlus} />
                 </Button>
               </Form>
@@ -140,6 +150,10 @@ function ProductDetails() {
           </div>
         </div>
       </Container>
+      <Toaster 
+      position="bottom-right"
+      reverseOrder={false}
+      />
       <Footer />
     </div>
     </>

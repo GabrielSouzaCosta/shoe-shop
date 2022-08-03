@@ -36,7 +36,7 @@ export default function ForgotPassword() {
       <div className='container text-dark h-75'>
         <div className='d-flex flex-column align-items-center justify-content-center text-center h-100'>
           {(!emailSent) ? 
-            <SendEmailForm handleSubmit={handleSubmit} isLoading={isLoading} />
+            <SendEmailForm handleSubmit={(e) => handleSubmit(e)}isLoading={isLoading} />
           :
           <>
             <h2>

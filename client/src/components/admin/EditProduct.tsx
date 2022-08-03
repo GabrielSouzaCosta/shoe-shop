@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import NavBar from '../NavBar'
 
 interface Product {
@@ -11,7 +11,7 @@ interface Product {
   category: number,
   price: number,
   description: string,
-  file: []
+  images: []
 }
 
 const categories:string[] = [
@@ -29,17 +29,19 @@ function EditProduct() {
     category: 0,
     price: 0,
     description: "",
-    file: []
+    images: []
   })
+  console.log(product.images)
 
   const { slug } = useParams()
+  const navigate = useNavigate()
 
   function handleUpdateProduct(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const formData = new FormData();
 
-    if (product.file) {
-      product.file.forEach((image) => {
+    if (product.images) {
+      product.images.forEach((image) => {
           console.log(image)
           formData.append("file", image);
       })
@@ -57,12 +59,17 @@ function EditProduct() {
         "Authorization": "Token "+sessionStorage.getItem('token')
       }
     })
+    .then(res => {
+      if (res.status === 200) {
+        navigate('/administration')
+      }
+    })
   }
 
   function handleUploadChange(e: React.FormEvent<HTMLInputElement>) {
     const targetFiles = e.currentTarget.files
     const targetFilesObject = [...targetFiles]
-    setProduct({...product, file: targetFilesObject})
+    setProduct({...product, images: targetFilesObject})
   }
   
   useEffect(() => {
@@ -153,14 +160,14 @@ function EditProduct() {
               }}}
             />
             <div className='d-flex justify-content-center align-items-center pt-2'>
-              {product.file?.map((file, i)=>{
+              {product.images?.map((file, i)=>{
                   return (
                     <img 
                     className='img-fluid me-1'
                     style={{maxHeight: "300px"}}
                     key={`image-${i}`} 
                     alt="shoe image" 
-                    src={URL.createObjectURL(file)} 
+                    src={file.get_image? import.meta.env.VITE_BACKEND_URL_BASE+file.get_thumbnail : URL.createObjectURL(file)} 
                     />
                   )   
               })}
