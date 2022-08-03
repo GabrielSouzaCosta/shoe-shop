@@ -68,14 +68,15 @@ function Cart() {
                   <div className='row w-100 justify-content-center text-center  pt-3 text-uppercase border-danger'>
                     <div className='col-8 col-lg-4'>
                       <InputGroup className="rounded">
-                        <Button onClick={() => handleSetQuantity(item.id, -1, item.quantity)} variant="primary" className="rounded fs-3 fw-bold px-3" id="button-addon2" >
+                        <Button onClick={() => handleSetQuantity(item.id, -1, item.quantity)} variant="danger" className="rounded fs-3 fw-bold px-3" id="button-addon2" >
                           -
                         </Button>
                         <Form.Control
                             value={item.quantity}
                             className="text-center text-dark fs-3"
+                            style={{pointerEvents: "none"}} 
                         />
-                        <Button onClick={() => handleSetQuantity(item.id, 1, item.quantity)} variant="primary" className="rounded fs-3 fw-bold" id="button-addon2">
+                        <Button onClick={() => handleSetQuantity(item.id, 1, item.quantity)} variant="danger" className="rounded fs-3 fw-bold" id="button-addon2">
                           +
                         </Button>
                       </InputGroup>

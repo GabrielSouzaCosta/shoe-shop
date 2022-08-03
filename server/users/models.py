@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
+from django_countries.serializer_fields import CountryField
 
 class CustomUserManager(BaseUserManager):
     """
@@ -38,7 +39,6 @@ class User(AbstractUser):
     email = models.EmailField(max_length=200, unique=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
-    account_address = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'email'
@@ -48,3 +48,16 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    street = models.CharField(max_length=100)
+    number = models.CharField(max_length=10)
+    zipcode = models.CharField(max_length=50)
+    country = CountryField(name_only=True)
+    default_adress = models.BooleanField(default=False)
+    phone = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.user} - address: {self.street}, {self.streetcountry}' 
+

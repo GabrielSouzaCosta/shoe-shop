@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom';
 
 interface NewShoes {
   name: string,
@@ -21,17 +22,19 @@ type Shoe = {
 }
 
 const categories:string[] = [
-  "sport",
-  "casual",
-  "heel",
-  "sport"
+  'Sport', 
+  'Casual',
+  'Sandals',
+  'Heels', 
+  'Social',
+  'Boots', 
 ]
 
 function ProductsAdmin() {
   const [shoes, setShoes] = useState<[]>([]);
   const [newShoes, setNewShoes] = useState<NewShoes>({
     name: "",
-    category: undefined,
+    category: 1,
     price: undefined,
     description: "",
     file: undefined
@@ -59,12 +62,22 @@ function ProductsAdmin() {
       "Authorization": "Token "+sessionStorage.getItem("token")
       }
     })
+    .then(res => {
+      if (res.status === 201) {
+        setShoes([...shoes, res.data])
+      }
+    })
   }
 
   async function handleDeleteProduct (slug:string) {
     await axios.delete(import.meta.env.VITE_BACKEND_URL+'/shoes/'+slug+'/', {
       headers: {
       "Authorization": "Token "+sessionStorage.getItem("token")
+      }
+    })
+    .then(res => {
+      if (res.status === 204) {
+        setShoes(shoes.filter((shoe) => shoe.slug !== slug))
       }
     })
   }
@@ -125,7 +138,13 @@ function ProductsAdmin() {
           <Form.Label className='pb-0 pt-2'>
             Description:
           </Form.Label>
-          <Form.Control className='text-dark' value={newShoes.description} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewShoes({...newShoes, description: e.currentTarget.value})} as="textarea" rows={4} placeholder='product description...' required/>
+          <Form.Control 
+          className='text-dark'
+          value={newShoes.description} 
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewShoes({...newShoes, description: e.currentTarget.value})} 
+          as="textarea" 
+          rows={4} 
+          placeholder='product description...' required/>
         </div>
         <div className="d-flex col-4 align-self-start mt-5">
           <Form.Label className='pe-2 pt-1'>
@@ -160,11 +179,13 @@ function ProductsAdmin() {
             <div className='col-4 bg-light border'>
               {shoe.description.substring(0,30)}
             </div>
-            <div className='col-2 bg-light border'>
+            <div className='col-3 bg-light border'>
               Added in: {shoe.date_added.substring(0,10)}
             </div>
             <div className='col-auto bg-primary border'>
-              <FontAwesomeIcon icon={faEdit} />
+              <Link to={`/administration/edit-product/${shoe.slug}`} className="text-dark">
+                <FontAwesomeIcon icon={faEdit} />
+              </Link>
             </div>
             <div className='col-auto bg-danger border'>
               <FontAwesomeIcon onClick={() => handleDeleteProduct(shoe.slug)} icon={faClose} />

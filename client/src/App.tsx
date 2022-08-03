@@ -11,6 +11,7 @@ import Admin from "./pages/Admin";
 import VerifyUser from "./pages/authentication/VerifyUser";
 import RegisterSuccessful from "./pages/authentication/RegisterSuccessful";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
+import EditProduct from "./components/admin/EditProduct";
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
           <Route path='/cart' element={ <Cart /> } />
           <Route path='/checkout' element={ <Checkout /> } />
           <Route path='/administration' element={ <Admin /> } />
+          <Route path='/administration/edit-product/:slug' element={ <EditProduct /> } />
       </Routes>
     </BrowserRouter>
   )

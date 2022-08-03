@@ -3,17 +3,74 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets, status
 from rest_framework.views import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.core.mail import send_mail
+from .serializers import CouponSerializer
+from .models import Coupon
 
 from paypalrestsdk import notifications 
 import json
 from pprint import pprint
 from .scripts import pagseguro_credit_card_request, pagseguro_boleto_payment
 
+class CouponViewSet(viewsets.ViewSet):
+    serializer_class = CouponSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        queryset = [coupon for coupon in Coupon.objects.all() if not coupon.expired]
+        return queryset 
+        
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = CouponSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk):
+        queryset = Coupon.objects.all()
+        coupon = get_object_or_404(queryset, pk=pk)
+        serializer = CouponSerializer(coupon)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def perform_create(self, serializer):
+        serializer.save(coupon=self.request.data)
+
+    def put(self, request, pk):
+        instance = self.get_object(pk)
+        instance.code = request.data['code']
+        instance.amount = request.data['amount']
+        instance.valid_days = request.data['valid_days']
+        instance.save()
+
+        serializer = self.serializer_class(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get_object(self, pk):
+        coupon = Coupon.objects.get(pk=pk)
+        return coupon
+
+    def destroy(self, request, pk):
+        product = self.get_object(pk)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Payment Handlers Views
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication,])
 @permission_classes([IsAuthenticated,])

@@ -103,7 +103,6 @@ function ProductDetails() {
                   </Button>
                   <Form.Control style={{pointerEvents: "none"}}
                       value={quantity}
-                      type="number"
                       className="text-center text-dark fs-3"
                   />
                   <Button onClick={() => handleSetQuantity(+1)} variant="dark" className="rounded fs-3" id="button-addon2">

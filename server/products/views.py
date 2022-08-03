@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import Response, APIView
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework import viewsets, status
-from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser, JSONParser
 from .models import Category, Product
 from .serializers import ProductsSerializer
 from .scripts import get_shipping
@@ -12,7 +12,7 @@ from .scripts import get_shipping
 class ProductsListView(viewsets.ViewSet):
   serializer_class = ProductsSerializer
   permission_classes = [IsAdminUser]
-  parser_classes = (MultiPartParser, FormParser, FileUploadParser)                                                
+  parser_classes = (MultiPartParser, FormParser, FileUploadParser, JSONParser)                                                
   lookup_field = 'slug'
 
   def get_queryset(self):
@@ -44,6 +44,20 @@ class ProductsListView(viewsets.ViewSet):
 
   def perform_create(self, serializer):
     serializer.save(product=self.request.data)
+
+  def update(self, request, slug):
+    instance = self.get_object(slug)
+    instance.name = request.data['name']
+    instance.category = Category.objects.get(pk=request.data['category'])
+    instance.description = request.data['description']
+    instance.price = request.data['price']
+    instance.save()
+
+    serializer = self.serializer_class(instance, data=request.data, context={'request': request})
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
   def get_object(self, slug):
     product = Product.objects.get(slug=slug)

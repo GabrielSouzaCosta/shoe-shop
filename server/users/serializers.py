@@ -8,5 +8,4 @@ class UserSerializer(serializers.ModelSerializer):
         'email', 
         'name', 
         'last_name',
-        'account_address'
         )

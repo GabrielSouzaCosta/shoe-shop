@@ -25,6 +25,7 @@ class Product(models.Model):
   slug = models.SlugField(unique=True, blank=True, null=True)
   description = models.TextField()
   price = models.DecimalField(max_digits=10, decimal_places=2)
+  discount_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
   date_added = models.DateTimeField(auto_now_add=True)
 
   class Meta:

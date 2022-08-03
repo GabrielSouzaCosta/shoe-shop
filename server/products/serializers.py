@@ -15,7 +15,7 @@ class ProductsSerializer(serializers.ModelSerializer):
   images = ImagesSerializer(many=True, read_only=True)
 
   class Meta:
-    model = Product 
+    model = Product
     fields = (
       'id',
       'name',
@@ -34,5 +34,13 @@ class ProductsSerializer(serializers.ModelSerializer):
       for i, image_data in enumerate(images_data):
         Images.objects.create(title=validated_data['name'], image=image_data, product=product)
       return product
+
+  def update(self, instance, validated_data):
+    images_data = self.context.get('request').FILES.getlist('file')
+    print(images_data)
+    for i, image_data in enumerate(images_data):
+      Images.objects.create(title=validated_data['name'], image=image_data, product=instance)
+    return instance
+
 
     

@@ -29,9 +29,6 @@ function UsersAdmin () {
             <div className='col-2 bg-light border title'>
               Name: {user.name? `${user.name} ${user.last_name}` : "not defined"}
             </div>
-            <div className='col-4 bg-light border'>
-              Address: {user.account_adress? user.account_adress : "not defined"}
-            </div>
           </div>
         )
       })
