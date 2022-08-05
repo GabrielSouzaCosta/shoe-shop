@@ -12,12 +12,22 @@ import VerifyUser from "./pages/authentication/VerifyUser";
 import RegisterSuccessful from "./pages/authentication/RegisterSuccessful";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
 import EditProduct from "./components/admin/EditProduct";
-import { useAuth } from "./utils/useAuth";
+
 import PaymentSuccess from "./pages/PaymentSuccess";
+import { useAppDispatch, useAppSelector } from "./redux/hooks/hooks";
+import { useEffect } from "react";
+import { profile } from "./utils/authService";
 
 
 function App() {
-  const user = ""
+  const { token } = useAppSelector(state => state.user)
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    if (sessionStorage.getItem('token')) {
+      dispatch(profile())
+    }
+  }, [sessionStorage])
 
   return (
     <BrowserRouter>
@@ -25,16 +35,16 @@ function App() {
           <Route path='/' element={ <Home /> }/>
           <Route path='/shoes/:slug' element={ <ProductDetails /> } />
           <Route path='/shoes' element={ <Products /> } />
-          <Route path='/login' element={user.id? <Navigate to='/' /> : <LoginPage /> } />
+          <Route path='/login' element={token? <Navigate to='/' /> : <LoginPage /> } />
           <Route path='/forgot-password' element={ <ForgotPassword /> } />
-          <Route path='/register' element={user.id? <Navigate to='/' /> : <RegisterPage /> } />
+          <Route path='/register' element={token? <Navigate to='/' /> : <RegisterPage /> } />
           <Route path="/register-successful" element={ <RegisterSuccessful /> } />  
           <Route path="/verify-user" element={ <VerifyUser /> } />
           <Route path='/cart' element={ <Cart /> } />
-          <Route path='/checkout' element={user.id? <Checkout /> : <Navigate to='/login' /> } />
-          <Route path='/payment-success' element={user.id? <PaymentSuccess /> : <Navigate to='/login' /> } />
-          <Route path='/administration' element={user.is_superuser?  <Admin />: <Navigate to='/' /> } />
-          <Route path='/administration/edit-product/:slug' element={user.is_superuser? <EditProduct/> : <Navigate to='/' /> } />
+          <Route path='/checkout' element={token? <Checkout /> : <Navigate to='/login' /> } />
+          <Route path='/payment-success' element={token? <PaymentSuccess /> : <Navigate to='/login' /> } />
+          <Route path='/administration' element={token?  <Admin />: <Navigate to='/' /> } />
+          <Route path='/administration/edit-product/:slug' element={token? <EditProduct/> : <Navigate to='/' /> } />
       </Routes>
     </BrowserRouter>
   )

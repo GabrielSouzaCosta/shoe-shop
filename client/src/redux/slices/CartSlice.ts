@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface CartState {
     items: {
-        id: number,
+        product: number,
         name: string,
         image: string,
         price: number,
@@ -11,7 +11,7 @@ interface CartState {
 }
 
 type CartItem = {
-    id: number,
+    product: number,
     name: string,
     image: string,
     price: number,
@@ -39,7 +39,7 @@ export const cartSlice = createSlice({
         addToCart: (state, action: PayloadAction<CartItem>) => {
             // Check if item is already on cartSlice, if true, increment the quantity, if not add to cart normally
             const hasItem = state.items.filter((item:CartItem) => {
-                if (item.id === action.payload.id) {
+                if (item.product === action.payload.product) {
                     return item
                 }
                 return null
@@ -48,7 +48,7 @@ export const cartSlice = createSlice({
             if (hasItem.length > 0) {
                 const newData = [...state.items];
                 const index = newData.findIndex(item => {
-                    return item.id === action.payload.id
+                    return item.product === action.payload.product
                 });
                 const item = {...newData[index]}
                 item.quantity += action.payload.quantity
@@ -56,7 +56,7 @@ export const cartSlice = createSlice({
                 localStorage.setItem('cart', JSON.stringify(newData))
                 return {items: newData}
             } else {
-                const newData = [...state.items, {id: action.payload.id, name: action.payload.name, price: action.payload.price, quantity: action.payload.quantity, image: action.payload.image }]
+                const newData = [...state.items, {product: action.payload.product, name: action.payload.name, price: action.payload.price, quantity: action.payload.quantity, image: action.payload.image }]
                 localStorage.setItem('cart', JSON.stringify(newData));
                 return {items: newData}
             }   
@@ -65,7 +65,7 @@ export const cartSlice = createSlice({
         incrementQuantity: (state, action: PayloadAction<number>) => {
             const newData = [...state.items];
             const index = newData.findIndex(item => {
-                return item.id === action.payload
+                return item.product === action.payload
             });
             const item = {...newData[index]};
             item.quantity += 1;
@@ -78,7 +78,7 @@ export const cartSlice = createSlice({
         decrementQuantity: (state, action: PayloadAction<number>) => {
             const newData = [...state.items];
             const index = newData.findIndex(item => {
-                return item.id === action.payload
+                return item.product === action.payload
             });
             const item = {...newData[index]};
             item.quantity -= 1;
@@ -90,7 +90,7 @@ export const cartSlice = createSlice({
         
         removeProduct: (state, action: PayloadAction<number>) => {
             const newData = [...state.items.filter((item) => {
-                return item.id !== action.payload
+                return item.product !== action.payload
             })];
             localStorage.setItem('cart', JSON.stringify(newData));
             return {items: newData}

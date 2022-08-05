@@ -3,6 +3,7 @@ import { Form, Button } from 'react-bootstrap'
 import axios from 'axios'
 import getCookie from '../utils/getCookie'
 import { useNavigate } from 'react-router-dom'
+import { useAppSelector } from '../redux/hooks/hooks'
 
 interface Card {
     name: string
@@ -17,6 +18,7 @@ function range(start:number, end:number) {
 }
 
 function CreditCard() {
+  const items = useAppSelector(state => state.cart.items)
   const [card, setCard] = useState<Card>({
       name: "",
       number: "",
@@ -24,14 +26,14 @@ function CreditCard() {
       year: "2022",
       ccv: ""
   })
-  let months = range(1,12);
-  let years = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032]
+  const months = range(1,12);
+  const years = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032]
 
   const navigate = useNavigate()
 
   async function handlePurchase(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    axios.post(import.meta.env.VITE_BACKEND_URL+'/credit-card/', card, {
+    axios.post(import.meta.env.VITE_BACKEND_URL+'/credit-card/', {...card, items}, {
         headers: {
             'Authorization': 'Token '+sessionStorage.getItem('token'),
             'x-csrftoken': getCookie("csrftoken")

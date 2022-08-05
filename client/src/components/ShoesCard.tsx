@@ -7,7 +7,7 @@ import { addToCart } from '../redux/slices/CartSlice'
 import toast from 'react-hot-toast'
 
 type Props = {
-    id: number,
+    product: number,
     slug: string,
     name: string,
     price: number,
@@ -15,7 +15,7 @@ type Props = {
   }
   
 const ShoesCard = ({
-    id,
+    product,
     slug,
     name,
     price,
@@ -27,7 +27,7 @@ const ShoesCard = ({
     const dispatch = useAppDispatch()
 
     function addProductToCart() {
-        dispatch(addToCart({id, name, price, quantity: 1, image}))
+        dispatch(addToCart({product, name, price, quantity: 1, image}))
         toast.success(() => (
             <span>
               {name} added to cart

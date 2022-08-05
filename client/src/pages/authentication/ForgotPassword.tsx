@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, HeadersDefaults } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import NavBar from '../../components/NavBar';

@@ -1,5 +1,5 @@
-export default function getCookie(name:string) {
-    let cookieValue = null;
+export default function getCookie(name: string) {
+    let cookieValue = undefined;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {

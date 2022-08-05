@@ -2,7 +2,7 @@ import { faCartPlus, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Container, Carousel, InputGroup, Form, Button, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import { Container, Carousel, InputGroup, Form, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
@@ -12,7 +12,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 
 interface Shoe {
-  id: number,
+  product: number,
   name: string,
   price: number,
   description: string,
@@ -24,7 +24,7 @@ interface Shoe {
 
 function ProductDetails() {
   const [shoe, setShoe] = useState<Shoe>({
-    id: 0,
+    product: 0,
     name: "",
     price: 0,
     description: "",
@@ -47,7 +47,7 @@ function ProductDetails() {
   }
 
   function handleAddToCart() {
-    dispatch(addToCart({id: shoe.id, name: shoe.name, price: shoe.price, quantity, image: shoe.images[0]?.get_thumbnail}))
+    dispatch(addToCart({product: shoe.product, name: shoe.name, price: shoe.price, quantity, image: shoe.images[0]?.get_thumbnail}))
     setQuantity(1)
     toast.success(() => (
       <span>

@@ -2,15 +2,17 @@ import { faBars, faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Navbar, Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../utils/useAuth";
-import { useAppSelector } from "../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks/hooks";
+import { logout } from '../redux/slices/UserSlice'
 
 function NavBar() { 
   const cart = useAppSelector(state => state.cart.items)
-  const user = ""
+  const user = useAppSelector(state => state.user)
+
+  const dispatch = useAppDispatch()
 
   function handleLogout() {
-    sessionStorage.removeItem("token")
+    dispatch(logout())
   }
 
   return (

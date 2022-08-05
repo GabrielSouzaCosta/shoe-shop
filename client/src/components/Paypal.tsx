@@ -4,12 +4,10 @@ import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 type Props = {
-    quantity: number,
     value: string
 }
 
 function Paypal({
-    quantity,
     value
 }: Props) {
   const navigate = useNavigate()

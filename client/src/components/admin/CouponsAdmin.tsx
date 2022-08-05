@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faClose } from '@fortawesome/free-solid-svg-icons'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 

@@ -10,7 +10,7 @@ import ShoesCard from '../components/ShoesCard'
 import { Toaster } from 'react-hot-toast'
 
 type ShoeCard = {
-  id: number,
+  product: number,
   name: string,
   slug: string,
   category: number,
@@ -43,7 +43,9 @@ function Products() {
     const getProducts = async () => {
       const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/shoes/')
       const data = response.data
-      setShoes(data)
+      setShoes(data.map((item:any) => {
+        return {product: item.id, name: item.name, slug: item.slug, category: item.category, price: item.price, images: item.images}
+      }))
     }
     getProducts()
   }, [])
@@ -64,13 +66,13 @@ function Products() {
               shoe.category == filter
             ).map((shoe: ShoeCard) => {
               return(
-                <ShoesCard id={shoe.id} slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
+                <ShoesCard product={shoe.product} slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
               )
             })
           :
             shoes.map((shoe: ShoeCard) => {
               return(
-                <ShoesCard id={shoe.id} slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
+                <ShoesCard product={shoe.product} slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
               )
             })
           }

@@ -12,11 +12,11 @@ function Cart() {
   const cart = useAppSelector(state => state.cart.items)
   const dispatch = useAppDispatch()
 
-  function handleSetQuantity(id:number, value:number, quantity:number) {
+  function handleSetQuantity(product:number, value:number, quantity:number) {
     if (value === 1) {
-      dispatch(incrementQuantity(id))
+      dispatch(incrementQuantity(product))
     } else if (quantity > 1) {
-      dispatch(decrementQuantity(id))
+      dispatch(decrementQuantity(product))
     }
   }
 
@@ -68,7 +68,7 @@ function Cart() {
                   <div className='row w-100 justify-content-center text-center  pt-3 text-uppercase border-danger'>
                     <div className='col-8 col-lg-4'>
                       <InputGroup className="rounded">
-                        <Button onClick={() => handleSetQuantity(item.id, -1, item.quantity)} variant="danger" className="rounded fs-3 fw-bold px-3" id="button-addon2" >
+                        <Button onClick={() => handleSetQuantity(item.product, -1, item.quantity)} variant="danger" className="rounded fs-3 fw-bold px-3" id="button-addon2" >
                           -
                         </Button>
                         <Form.Control
@@ -76,7 +76,7 @@ function Cart() {
                             className="text-center text-dark fs-3"
                             style={{pointerEvents: "none"}} 
                         />
-                        <Button onClick={() => handleSetQuantity(item.id, 1, item.quantity)} variant="danger" className="rounded fs-3 fw-bold" id="button-addon2">
+                        <Button onClick={() => handleSetQuantity(item.product, 1, item.quantity)} variant="danger" className="rounded fs-3 fw-bold" id="button-addon2">
                           +
                         </Button>
                       </InputGroup>
@@ -89,7 +89,7 @@ function Cart() {
                       <span className='d-inline d-md-none'>Total: </span>${(item.price * item.quantity).toFixed(2)}
                     </div>
                     <div className='col-2 col-lg-1 align-self-center align-self-lg-start'>
-                      <Button onClick={() => dispatch(removeProduct(item.id))} variant='danger'>
+                      <Button onClick={() => dispatch(removeProduct(item.product))} variant='danger'>
                         X
                       </Button>
                     </div>

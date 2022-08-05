@@ -2,20 +2,24 @@ import axios from 'axios'
 import React from 'react'
 import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
+import { useAppSelector } from '../redux/hooks/hooks'
 import getCookie from '../utils/getCookie'
 
 function Boleto() {
+  const items = useAppSelector(state => state.cart.items)
+
   const navigate = useNavigate()
 
   function handleBoletoPayment() {
-    axios.post(import.meta.env.VITE_BACKEND_URL+'/boleto/', {name: "Gabriel Souza Costa"}, {
+    const csrftoken = getCookie("csrftoken")
+    axios.post(import.meta.env.VITE_BACKEND_URL+'/boleto/', {name: "Gabriel Souza Costa" , items}, {
       headers: {
         'Authorization': 'Token '+sessionStorage.getItem('token'),
-        'x-csrftoken': getCookie("csrftoken")
+        'x-csrftoken': csrftoken
     }
     })
     .then(res => {
-      if (res.status === 200) {
+      if (res.status === 201) {
         navigate('/payment-success', {state: {boleto: res.data, method: 2} })
       }
     })

@@ -1,14 +1,14 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
 import AuthCard from "../../components/AuthCard"
-import { authService }from '../../utils/authService'
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks"
+import { loginUser }from '../../utils/authService'
 
 function LoginPage() {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
-  const [msg, setMsg] = useState<[]>([])
-
-  const navigate = useNavigate()
+  
+  const { loading, success, error } = useAppSelector(state => state.user)
+  const dispatch = useAppDispatch()
 
   function onEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
@@ -18,14 +18,7 @@ function LoginPage() {
   }
 
   async function handleLogin() {
-    setTimeout(() => {
-      authService.login(email, password)
-      .then((res: any) => {
-        sessionStorage.setItem('token', res.data.token);
-        navigate('/');
-      })
-      .catch((err) => setMsg(Object.values<[]>(err.response.data)[0]))
-    }, 2000)
+    dispatch(loginUser({email, password}))
   }
 
   return (
@@ -36,8 +29,10 @@ function LoginPage() {
         password={password} 
         onEmailChange={onEmailChange} 
         onPasswordChange={onPasswordChange} 
-        handleLogin={handleLogin} 
-        msg={msg} 
+        handleLogin={handleLogin}
+        loading={loading}
+        success={success}
+        msg={error} 
         />
       </div>
     </div>

@@ -33,6 +33,7 @@ class Payment(models.Model):
     payment_id = models.TextField()
     method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
     amount = models.FloatField()
+    paid = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.method}: {self.payment_id}'
@@ -54,9 +55,7 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    ordered = models.BooleanField(default=False)
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
 

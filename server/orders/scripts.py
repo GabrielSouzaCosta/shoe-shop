@@ -51,7 +51,7 @@ def pagseguro_boleto_payment(product, value, name):
     "installments": 1,
     "capture": False,
     "boleto": {
-      "due_date": "2022-08-05",
+      "due_date": "2022-08-10",
       "holder": {
         "address": {
           "country": "Brasil",

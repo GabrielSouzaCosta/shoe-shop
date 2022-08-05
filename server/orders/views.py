@@ -10,13 +10,23 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.core.mail import send_mail
-from .serializers import CouponSerializer
-from .models import Coupon
+from .serializers import CouponSerializer, OrderSerializer
+from .models import Coupon, Order
 
 from paypalrestsdk import notifications 
 import json
 from pprint import pprint
 from .scripts import pagseguro_credit_card_request, pagseguro_boleto_payment
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication,])
+@permission_classes([IsAuthenticated,])
+def orders_list(request):
+    orders = Order.objects.filter(user=request.user)
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data)
+
 
 class CouponViewSet(viewsets.ViewSet):
     serializer_class = CouponSerializer
@@ -80,17 +90,27 @@ class CouponViewSet(viewsets.ViewSet):
 @authentication_classes([TokenAuthentication,])
 @permission_classes([IsAuthenticated,])
 def credit_card_payment(request):
-    response = pagseguro_credit_card_request("nike shock", 2000, request.data['name'], request.data['month'], request.data['year'], request.data['ccv'])
-    pprint(response)
-    return Response(response)
+    serializer = OrderSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save(user=request.user)
+        response = pagseguro_credit_card_request("nike shock", 2000, request.data['name'], request.data['month'], request.data['year'], request.data['ccv'])
+        pprint(response)
+        return Response(response, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication,])
 @permission_classes([IsAuthenticated,])
 def boleto_payment(request):
-    response = pagseguro_boleto_payment("nike shock", 2000, request.data['name'])
-    pprint(response)
-    return Response(response)
+    serializer = OrderSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        serializer.save(user=request.user)
+        response = pagseguro_boleto_payment("nike shock", 2000, request.data['name'])
+        pprint(response)
+        return Response(response, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @method_decorator(csrf_exempt, name="dispatch")
 class ProcessWebhookView(View):

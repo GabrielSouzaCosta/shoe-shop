@@ -1,11 +1,14 @@
-import { Button, Form } from "react-bootstrap"
-import { Link } from "react-router-dom"
+import { Button, Form, Spinner } from "react-bootstrap"
+import { Link, useNavigate } from "react-router-dom"
+import { useEffect } from 'react'
 
 type Props = {
   type: string,
   email: string,
   password: string,
   rePassword?: string,
+  loading: boolean,
+  success: boolean,
   msg: [], 
   onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
   onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
@@ -19,16 +22,26 @@ const AuthCard = ({
   email, 
   password, 
   rePassword,
+  loading,
+  success,
   msg,
   onEmailChange,
   onPasswordChange,
   onRePasswordChange,
   handleLogin,
   handleRegister
-  }: Props) =>
+  }: Props) => {
 
-  (
-    <div className="card col-11 col-md-8 col-lg-7 pb-3" style={{backgroundColor: "#ffffffee"}}>
+    const navigate = useNavigate()
+    
+    useEffect(() => {
+      if (success && handleRegister) navigate('/register-successful')
+      else if (success && handleLogin) navigate('/')
+    }, [navigate, success])
+
+    
+    return (
+      <div className="card col-11 col-md-8 col-lg-7 pb-3" style={{backgroundColor: "#ffffffee"}}>
           <h1 className="title text-center pt-4 text-dark display-2">
             {type}
           </h1>
@@ -60,12 +73,12 @@ const AuthCard = ({
             <div className="col-6 text-center pt-3">
             {(type === "register") ?
               <Button onClick={handleRegister} variant="dark" className="rounded text-uppercase fs-2 brand px-4">
-                Sign up
+                {loading ? "Loading.." : "Sign up"}
               </Button>
             :
               <div className="d-flex flex-column align-items-center">
                 <Button onClick={handleLogin} className="rounded text-uppercase fs-2 brand px-4 mb-2">
-                  Sign in
+                  {loading ? <Spinner animation="border" role="status" /> : "Sign in"}
                 </Button>
                 <Link to="/forgot-password">
                   <Form.Text className="link-danger fs-5">
@@ -96,6 +109,7 @@ const AuthCard = ({
           </div>
         </div>
   )
+}
 
-
-export default AuthCard
+  
+  export default AuthCard

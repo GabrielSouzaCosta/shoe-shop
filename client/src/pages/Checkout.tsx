@@ -3,7 +3,7 @@ import NavBar from '../components/NavBar'
 import { Button, Container, Form, Spinner } from 'react-bootstrap'
 import axios, { AxiosResponse } from 'axios'
 import { useAppSelector } from '../redux/hooks/hooks'
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import Paypal from '../components/Paypal'
 import { Toaster } from 'react-hot-toast';
 import CreditCard from '../components/CreditCard'
@@ -35,8 +35,8 @@ type Item = {
 }
 
 interface ShippingResponse extends AxiosResponse {
-    sedex: {}
-    pac: {}
+    sedex: Record<string, unknown>
+    pac: Record<string, unknown>
 }
 
 function Checkout() {
