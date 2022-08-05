@@ -1,15 +1,23 @@
 import axios from 'axios'
 import React from 'react'
 import { Button } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 import getCookie from '../utils/getCookie'
 
 function Boleto() {
+  const navigate = useNavigate()
+
   function handleBoletoPayment() {
     axios.post(import.meta.env.VITE_BACKEND_URL+'/boleto/', {name: "Gabriel Souza Costa"}, {
       headers: {
         'Authorization': 'Token '+sessionStorage.getItem('token'),
         'x-csrftoken': getCookie("csrftoken")
     }
+    })
+    .then(res => {
+      if (res.status === 200) {
+        navigate('/payment-success', {state: {boleto: res.data, method: 2} })
+      }
     })
   }
 

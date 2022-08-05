@@ -8,7 +8,7 @@ from rest_framework import viewsets, status
 from rest_framework.views import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.core.mail import send_mail
 from .serializers import CouponSerializer
 from .models import Coupon
@@ -21,6 +21,11 @@ from .scripts import pagseguro_credit_card_request, pagseguro_boleto_payment
 class CouponViewSet(viewsets.ViewSet):
     serializer_class = CouponSerializer
     permission_classes = [IsAdminUser]
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [permission() for permission in self.permission_classes]
+        return [AllowAny()]
 
     def get_queryset(self):
         queryset = [coupon for coupon in Coupon.objects.all() if not coupon.expired]

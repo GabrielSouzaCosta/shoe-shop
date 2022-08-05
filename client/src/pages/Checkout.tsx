@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import NavBar from '../components/NavBar'
 import { Button, Container, Form, Spinner } from 'react-bootstrap'
 import axios, { AxiosResponse } from 'axios'
@@ -21,6 +21,11 @@ type ShippingMethod = {
   value: number
 }
 
+type Coupon = {
+  code: string,
+  amount: number,
+}
+
 type Item = {
   id: number
   name: string
@@ -37,13 +42,15 @@ interface ShippingResponse extends AxiosResponse {
 function Checkout() {
   const cart = useAppSelector(state => state.cart.items)
   const [zipcode, setZipcode] = useState<string>("")
+  const [coupons, setCoupons] = useState<Coupon[]>([])
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon>({code: "", amount: 0})
   const [shippingDetails, setShippingDetails] = useState<ShippingTypes[]>([])
   const [shippingMethod, setShippingMethod] = useState<ShippingMethod>({
     method: "",
     value: 0
   })
-  const [errorMsg, setErrorMsg] = useState<string>("")
   const [paymentMethod, setPaymentMethod] = useState<number>(0)
+  const [errorMsg, setErrorMsg] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
 
   const paymentMethods = [
@@ -60,9 +67,12 @@ function Checkout() {
     cart.forEach((item: Item) => {
       total += item.price * item.quantity
     })
+    if (appliedCoupon.amount) {
+      total *= (100 - appliedCoupon.amount) / 100
+    }
     return total
-  }
-
+  }  
+  
   async function calcularFrete(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (zipcode.length === 9) {
@@ -90,6 +100,21 @@ function Checkout() {
       setZipcode(e.currentTarget.value)
     }
   }
+
+
+  function applyCoupon(e:React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const findCoupon = coupons.find(({code}) => code === appliedCoupon.code)
+    if (findCoupon) {
+      setAppliedCoupon(findCoupon)
+    }
+  }
+
+  useEffect(() => {
+    axios.get(import.meta.env.VITE_BACKEND_URL+'/coupons/').then(
+      res => setCoupons(res.data)
+    )
+  }, [])
 
   return (
   <>
@@ -123,7 +148,37 @@ function Checkout() {
               )
             })
             }
-           
+           <div className='row mt-3'>
+              <hr className='col-lg-10' style={{border: "2px solid #000000"}}></hr>
+            </div>
+            <h2 className='title fw-bold fs-1'>
+              Coupons
+            </h2>
+            <Form onSubmit={applyCoupon} className="row align-items-center">
+              <div className='col-md-4 px-0 col-lg-2'>
+                <Form.Control
+                value={appliedCoupon.code}
+                onChange={(e:React.ChangeEvent<HTMLInputElement>) => setAppliedCoupon({...appliedCoupon, code: e.currentTarget.value.toUpperCase()})}
+                placeholder='e.g SHOES10'
+                className='border rounded-0 text-dark'/>
+              </div>
+              <div className='col-md-4 ms-1 px-0 col-lg-2'>
+                <Button type="submit" variant='warning text-white'>
+                  Apply
+                </Button>
+              </div>
+              <div className='d-block mt-3 text-uppercase title'>
+                <span className='fw-bold fs-5'>Applicable coupons</span>
+              {coupons?.map((coupon) => 
+                <div className='mt-1 col-2'>
+                  <div className=' bg-light p-2'>
+                    {coupon.code}
+                  </div> 
+                </div>
+              )
+              }
+              </div>
+            </Form>
             <div className='row mt-3'>
               <hr className='col-lg-10' style={{border: "2px solid #000000"}}></hr>
             </div>
@@ -188,7 +243,7 @@ function Checkout() {
               <hr className='col-10' style={{border: "2px solid #000000"}}></hr>
             </div>
             <div className='fs-1'>
-              Total: ${getTotal().toFixed(2)} + ${shippingMethod.value.toFixed(2)}(shipping) = ${(getTotal() + shippingMethod.value).toFixed(2)}
+              Total: ${getTotal().toFixed(2)} + ${shippingMethod.value.toFixed(2)}(shipping) {appliedCoupon.amount? `- %${appliedCoupon.amount}`: '' } = ${(getTotal() + shippingMethod.value).toFixed(2)}
             </div>
           </div>
           <div className='fs-2 col-12 col-md-10 col-lg-5 py-4 justify-content-center mx-auto' style={{minHeight: "700px"}} >

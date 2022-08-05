@@ -1,6 +1,7 @@
 import React from 'react'
 import { PayPalButtons } from '@paypal/react-paypal-js'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 
 type Props = {
     quantity: number,
@@ -11,6 +12,8 @@ function Paypal({
     quantity,
     value
 }: Props) {
+  const navigate = useNavigate()
+
   return (
     <div>
         <h2 className='mb-3 text-center'>
@@ -29,9 +32,11 @@ function Paypal({
                 ]
             })
         }}
+
         onApprove={async (data, actions) => {
             return await actions.order?.capture().then(details => {
                 toast.success("Payment success. Thank you "+ details.payer.name?.given_name)
+                navigate('/payment-success', {state: {paypal: details}})
             })
         }}
         onCancel={() => {

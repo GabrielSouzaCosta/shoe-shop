@@ -7,7 +7,7 @@ import { useAppSelector } from "../redux/hooks/hooks";
 
 function NavBar() { 
   const cart = useAppSelector(state => state.cart.items)
-  const user = useAuth()
+  const user = ""
 
   function handleLogout() {
     sessionStorage.removeItem("token")
@@ -50,7 +50,7 @@ function NavBar() {
             } 
             </span>
           </NavLink>
-          {(user.is_superuser) ? 
+          {(user) ? 
             <NavLink to="/administration" className="d-none d-md-block pe-2">
               Admin
             </NavLink>  
