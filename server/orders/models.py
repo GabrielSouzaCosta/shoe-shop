@@ -28,19 +28,12 @@ class Coupon(models.Model):
         return f'{self.code} valid for {self.valid_days} days'
 
 
-class Payment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True)
-    payment_id = models.TextField()
-    method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
-    amount = models.FloatField()
-    paid = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f'{self.method}: {self.payment_id}'
-
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True)
+    payment_id = models.TextField()
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
+    amount = models.FloatField()
+    paid = models.BooleanField(default=False)
     shipping_address = models.ForeignKey(Address, related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
     coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, blank=True, null=True)
     being_delivered = models.BooleanField(default=False)
@@ -51,13 +44,13 @@ class Order(models.Model):
         ordering = ['-ordered_date',]
 
     def __str__(self):
-        return self.payment.payment_id
+        return self.payment_id
 
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+    quantity = models.IntegerField()
 
     def __str__(self):
         return f"{self.quantity} of {self.product.name}"

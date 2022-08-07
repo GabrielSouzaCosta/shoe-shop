@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../redux/hooks/hooks'
 import { removeProduct, incrementQuantity, decrementQuantity } from '../redux/slices/CartSlice'
 import { useEffect, useState } from 'react'
+import Footer from '../components/Footer'
 
 function Cart() {
   const [total, setTotal] = useState<number>(0)
@@ -122,6 +123,7 @@ function Cart() {
 
       </Container>
     </div>
+    <Footer />
   </>
   )
 }

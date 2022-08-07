@@ -69,7 +69,7 @@ function PaymentSuccess() {
             <FontAwesomeIcon className='fs-1 text-success' icon={faCircleCheck} />
             <h1 className='text-uppercase my-3' style={{borderBottom: '1px solid #000000'}}>Payment Success</h1>
             {messages[state.method]}
-            <Link to='/' className='d-inline'>
+            <Link to='/profile' className='d-inline'>
               <Button variant='success' className='title fw-bold rounded fs-3 text-uppercase'>
                   My orders
               </Button>

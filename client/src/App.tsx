@@ -17,6 +17,8 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import { useAppDispatch, useAppSelector } from "./redux/hooks/hooks";
 import { useEffect } from "react";
 import { profile } from "./utils/authService";
+import Profile from "./pages/Profile";
+import OrderDetails from "./pages/OrderDetails";
 
 
 function App() {
@@ -27,7 +29,7 @@ function App() {
     if (sessionStorage.getItem('token')) {
       dispatch(profile())
     }
-  }, [sessionStorage])
+  }, [token])
 
   return (
     <BrowserRouter>
@@ -43,6 +45,8 @@ function App() {
           <Route path='/cart' element={ <Cart /> } />
           <Route path='/checkout' element={token? <Checkout /> : <Navigate to='/login' /> } />
           <Route path='/payment-success' element={token? <PaymentSuccess /> : <Navigate to='/login' /> } />
+          <Route path='/profile' element={token? <Profile /> : <Navigate to='/login' />} />
+          <Route path='/orders/:id' element={token? <OrderDetails /> : <Navigate to='/login' />} />
           <Route path='/administration' element={token?  <Admin />: <Navigate to='/' /> } />
           <Route path='/administration/edit-product/:slug' element={token? <EditProduct/> : <Navigate to='/' /> } />
       </Routes>

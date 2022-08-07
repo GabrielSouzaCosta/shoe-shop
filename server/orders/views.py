@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.core.mail import send_mail
-from .serializers import CouponSerializer, OrderSerializer
+from .serializers import CouponSerializer, OrderSerializer, MyOrderSerializer
 from .models import Coupon, Order
 
 from paypalrestsdk import notifications 
@@ -18,14 +18,24 @@ import json
 from pprint import pprint
 from .scripts import pagseguro_credit_card_request, pagseguro_boleto_payment
 
+class OrdersListViewSet(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = MyOrderSerializer
 
-@api_view(['GET'])
-@authentication_classes([TokenAuthentication,])
-@permission_classes([IsAuthenticated,])
-def orders_list(request):
-    orders = Order.objects.filter(user=request.user)
-    serializer = OrderSerializer(orders, many=True)
-    return Response(serializer.data)
+    def get_queryset(self):
+        queryset = Order.objects.filter(user=self.request.user)
+        return queryset
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = MyOrderSerializer(queryset, many=True)
+        print(serializer.data)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
 
 
 class CouponViewSet(viewsets.ViewSet):
@@ -93,9 +103,9 @@ def credit_card_payment(request):
     serializer = OrderSerializer(data=request.data)
 
     if serializer.is_valid():
-        serializer.save(user=request.user)
         response = pagseguro_credit_card_request("nike shock", 2000, request.data['name'], request.data['month'], request.data['year'], request.data['ccv'])
         pprint(response)
+        serializer.save(user=request.user, amount=response['amount']['value']/100, payment_id=response['id'])
         return Response(response, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -106,9 +116,9 @@ def boleto_payment(request):
     serializer = OrderSerializer(data=request.data)
     
     if serializer.is_valid():
-        serializer.save(user=request.user)
         response = pagseguro_boleto_payment("nike shock", 2000, request.data['name'])
         pprint(response)
+        serializer.save(user=request.user, amount=response['amount']['value']/100, payment_id=response['id'])
         return Response(response, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

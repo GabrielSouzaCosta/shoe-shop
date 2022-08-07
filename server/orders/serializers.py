@@ -1,24 +1,49 @@
 from rest_framework import serializers
-from .models import Coupon, Order, OrderItem, Payment
-
+from .models import Coupon, Order, OrderItem
+from products.serializers import ImagesSerializer, ProductsSerializer
 
 class CouponSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coupon
         fields = ('id', 'code', 'amount', 'valid_days', 'created_at',)
 
-    def update(self, instance, validated_data):
+    def update(self, instance):
       return instance
 
-class PaymentSerializer(serializers.ModelSerializer):
+
+class MyOrderItemSerializer(serializers.ModelSerializer):
+    product = ProductsSerializer(read_only=True)
+
     class Meta:
-        model = Payment
-        fields = ('payment_id', 'method', 'amount', 'user',)
+        model = OrderItem
+        fields = (
+            'product',
+            'quantity',
+            'get_final_price',
+            )
+
+class MyOrderSerializer(serializers.ModelSerializer):
+    items = MyOrderItemSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = (
+            'id',
+            'payment_id',
+            'amount',
+            'payment_method',
+            'shipping_address',
+            'being_delivered',
+            'paid',
+            'received',
+            'items',
+            'ordered_date',
+        )
 
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
-        fields = ( 
+        fields = (
             'product',
             'quantity',
             'get_final_price',
@@ -31,7 +56,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = (
             'id',
-            'payment',
+            'payment_method',
             'shipping_address',
             'being_delivered',
             'received',

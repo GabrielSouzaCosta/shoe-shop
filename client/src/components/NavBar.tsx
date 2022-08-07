@@ -1,4 +1,4 @@
-import { faBars, faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCartShopping, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container, Navbar, Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
@@ -53,8 +53,8 @@ function NavBar() {
             </span>
           </NavLink>
           {(user) ? 
-            <NavLink to="/administration" className="d-none d-md-block pe-2">
-              Admin
+            <NavLink to="/profile" className="d-none d-md-block pe-2 me-1 fs-2">
+              <FontAwesomeIcon icon={faUserCircle} />
             </NavLink>  
           :
           ""

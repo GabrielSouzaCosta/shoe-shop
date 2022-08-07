@@ -3,7 +3,8 @@ import { Form, Button } from 'react-bootstrap'
 import axios from 'axios'
 import getCookie from '../utils/getCookie'
 import { useNavigate } from 'react-router-dom'
-import { useAppSelector } from '../redux/hooks/hooks'
+import { useAppDispatch, useAppSelector } from '../redux/hooks/hooks'
+import { clearCart } from '../redux/slices/CartSlice'
 
 interface Card {
     name: string
@@ -19,6 +20,7 @@ function range(start:number, end:number) {
 
 function CreditCard() {
   const items = useAppSelector(state => state.cart.items)
+  const [disabled, setDisabled] = useState(false)
   const [card, setCard] = useState<Card>({
       name: "",
       number: "",
@@ -29,19 +31,24 @@ function CreditCard() {
   const months = range(1,12);
   const years = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032]
 
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   async function handlePurchase(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    axios.post(import.meta.env.VITE_BACKEND_URL+'/credit-card/', {...card, items}, {
+    setDisabled(true)
+    await axios.post(import.meta.env.VITE_BACKEND_URL+'/credit-card/', {...card, items, payment_method: 'CREDIT_CARD'}, {
         headers: {
             'Authorization': 'Token '+sessionStorage.getItem('token'),
             'x-csrftoken': getCookie("csrftoken")
         }
     })
     .then(res => {
+        dispatch(clearCart())
         navigate('/payment-success', {state: {creditCard: res.data, method: 0}})
     })
+    .catch(err => console.log(err))
+    setDisabled(false)
   }
   
   return (
@@ -91,8 +98,8 @@ function CreditCard() {
             </Form.Label>
             <Form.Control className='text-dark' value={card.ccv} onChange={(e) => setCard({...card, ccv: e.currentTarget.value})}/>
         </div>
-        <Button type="submit" variant="dark" className="col-6 mt-4 text-center mx-auto text-uppercase fs-3 title rounded">
-            Confirm Order
+        <Button type="submit" disabled={disabled} variant="dark" className="col-6 mt-4 text-center mx-auto text-uppercase fs-3 title rounded">
+            {disabled ? 'Loading..' : 'Confirm Order'}
         </Button>
     </Form>
   )

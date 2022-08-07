@@ -8,6 +8,7 @@ import Paypal from '../components/Paypal'
 import { Toaster } from 'react-hot-toast';
 import CreditCard from '../components/CreditCard'
 import Boleto from '../components/Boleto'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 type ShippingTypes = {
   Codigo?: number
@@ -27,7 +28,6 @@ type Coupon = {
 }
 
 type Item = {
-  id: number
   name: string
   image: string
   price: number
@@ -53,11 +53,13 @@ function Checkout() {
   const [errorMsg, setErrorMsg] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
 
+  const navigate = useNavigate()
+
   const paymentMethods = [
     <CreditCard />,
     <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID, currency: "BRL" }}>
       <Toaster />
-      <Paypal quantity={cart.length} value={"100.00"}/>
+      <Paypal value={"100.00"}/>
     </PayPalScriptProvider>,
     <Boleto />
   ]
@@ -94,11 +96,7 @@ function Checkout() {
   }
 
   function handleZipcodeChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.currentTarget.value.length === 5) {
-      setZipcode(e.currentTarget.value+'-')
-    } else {
       setZipcode(e.currentTarget.value)
-    }
   }
 
 
@@ -111,6 +109,9 @@ function Checkout() {
   }
 
   useEffect(() => {
+    if (cart.length === 0) {
+      navigate('/')
+    }
     axios.get(import.meta.env.VITE_BACKEND_URL+'/coupons/').then(
       res => setCoupons(res.data)
     )
@@ -203,7 +204,7 @@ function Checkout() {
               {loading ? 
               <Spinner animation="border" role="status" className='ms-2 mb-md-2' /> 
               : 
-              <Button className='col-auto ms-2 mb-md-2 rounded title fw-bold fs-5 p-1 px-2'>
+              <Button type='submit' className='col-auto ms-2 mb-md-2 rounded title fw-bold fs-5 p-1 px-2'>
               SUBMIT
               </Button>
               }
