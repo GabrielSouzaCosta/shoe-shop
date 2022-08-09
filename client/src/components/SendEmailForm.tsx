@@ -28,6 +28,8 @@ function SendEmailForm({
           <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="email" className='form-control w-50 text-dark' placeholder='e.g., bestbakeryinworld@gmail.com...'/>
         </div>
         {(isLoading === false) ?
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           <button onClick={() => handleSubmit(email)} className="btn btn-secondary mt-2 text-uppercase fs-4" style={{borderRadius: "30px"}}>Submit</button>
         :
           <Spinner animation="border" role="status" className='mb-2 mt-2' /> 

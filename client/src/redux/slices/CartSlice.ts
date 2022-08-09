@@ -70,7 +70,7 @@ export const cartSlice = createSlice({
             const item = {...newData[index]};
             item.quantity += 1;
             newData[index] = item;
-            
+            console.log(newData)
             localStorage.setItem('cart', JSON.stringify(newData));
             return {items: newData};
         },

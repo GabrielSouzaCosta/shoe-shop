@@ -36,7 +36,7 @@ const AuthCard = ({
     
     useEffect(() => {
       if (success && handleRegister) navigate('/register-successful')
-      else if (success && handleLogin) navigate('/')
+      else if (success && handleLogin) navigate(-1)
     }, [navigate, success])
 
     

@@ -12,7 +12,7 @@ PAYMENT_METHODS = (
 )
 
 class Coupon(models.Model):
-    code = models.CharField(max_length=15)
+    code = models.CharField(max_length=100)
     amount = models.FloatField()
     valid_days = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -31,7 +31,7 @@ class Coupon(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     payment_id = models.TextField()
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
+    payment_method = models.CharField(max_length=100, choices=PAYMENT_METHODS)
     amount = models.FloatField()
     paid = models.BooleanField(default=False)
     shipping_address = models.ForeignKey(Address, related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)

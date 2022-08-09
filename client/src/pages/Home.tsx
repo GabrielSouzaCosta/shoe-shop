@@ -1,4 +1,5 @@
 import NavBar from "../components/NavBar"
+import CookieConsent from "react-cookie-consent";
 import { Button, Container, Carousel } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleRight, faStar } from '@fortawesome/free-solid-svg-icons'
@@ -149,6 +150,16 @@ function Home() {
     </section>
 
     <Footer />
+    <CookieConsent
+      location="bottom"
+      buttonText="I understand"
+      cookieName="myAwesomeCookie"
+      style={{ background: "rgba(237, 212, 178, 1)", color: '#000000', fontSize: "1.4rem", textAlign: "center", display: "inline", marginBottom: "0" }}
+      buttonStyle={{ color: "#ffffff", fontSize: "20px", backgroundColor: "rgba(29, 17, 40, 1)", display: "inline", marginTop: "0" }}
+      expires={150}
+    >
+      This website uses cookies to enhance the user experience.{" "}
+    </CookieConsent>
   </>
   )
 }

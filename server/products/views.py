@@ -16,9 +16,10 @@ class ProductsListView(viewsets.ViewSet):
   lookup_field = 'slug'
 
   def get_queryset(self):
-    category = self.request.query_params.get('category')
-    if category:
-      queryset = Product.objects.filter(category=category)
+    search = self.request.query_params.get('product')
+    if search:
+      print(search)
+      queryset = Product.objects.filter(name__startswith=search)
       return queryset
     queryset = Product.objects.all()
     return queryset

@@ -8,6 +8,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import ShoesCard from '../components/ShoesCard'
 import { Toaster } from 'react-hot-toast'
+import { useSearchParams } from 'react-router-dom'
 
 type ShoeCard = {
   product: number,
@@ -26,6 +27,9 @@ function Products() {
   const [showFilter, setShowFilter] = useState(false);
   const [filter, setFilter] = useState<number>(0);
 
+  const [searchParams, setSearchParams] = useSearchParams()
+  const product = searchParams.get('product')
+
   function handleShowFilter() {
     setShowFilter(!showFilter);
   }
@@ -41,14 +45,19 @@ function Products() {
 
   useEffect(() => {
     const getProducts = async () => {
-      const response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/shoes/')
+      let response
+      if (product) {
+        response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/shoes/?product='+product)
+      } else {
+        response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/shoes/')
+      }
       const data = response.data
       setShoes(data.map((item:any) => {
         return {product: item.id, name: item.name, slug: item.slug, category: item.category, price: item.price, images: item.images}
       }))
     }
     getProducts()
-  }, [])
+  }, [searchParams])
 
   return (
   <>
@@ -61,21 +70,32 @@ function Products() {
       }
       <Container className='h-100 mt-1' fluid>
         <div className='row h-100 justify-content-center mx-auto py-5 position-relative'>
-          {(filter !== 0) ?
-            shoes.filter((shoe: ShoeCard) => 
-              shoe.category == filter
-            ).map((shoe: ShoeCard) => {
-              return(
-                <ShoesCard product={shoe.product} slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
-              )
-            })
-          :
-            shoes.map((shoe: ShoeCard) => {
-              return(
-                <ShoesCard product={shoe.product} slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
-              )
-            })
-          }
+            {(filter !== 0) ?
+                shoes.filter((shoe: ShoeCard) => 
+                shoe.category == filter
+                ).map((shoe: ShoeCard) => {
+                  return(
+                    <ShoesCard product={shoe.product} slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
+                    )
+                  })
+                :
+                  shoes.map((shoe: ShoeCard) => {
+                    return(
+                      <ShoesCard product={shoe.product} slug={shoe.slug} image={shoe.images[0]?.get_thumbnail} name={shoe.name} price={shoe.price} />
+                      )
+                    })
+            }
+
+            {(shoes.length === 0) ? 
+              <>
+                <div className='fs-2 text-center text-dark mt-5 text-uppercase title'>
+                  Sorry, there's nothing to see here, try another search.
+                </div>
+                <img src='/icons/sad.svg' className='img-fluid' style={{maxHeight: '700px'}}/>
+              </>
+              :
+              ""
+            }
         </div>
       </Container>
       <Toaster   

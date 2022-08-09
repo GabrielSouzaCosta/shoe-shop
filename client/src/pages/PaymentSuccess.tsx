@@ -5,10 +5,39 @@ import NavBar from '../components/NavBar'
 import { Button } from 'react-bootstrap'
 import { Link, useLocation } from 'react-router-dom'
 
+interface Payment {
+  method: number
+}
+
+interface CreditCardInterface {
+  creditCard: {
+    id: string
+    amount: {
+      value: number
+    }
+  }
+}
+
+interface PaypalInterface {
+  paypal: Record<string, unknown>
+}
+
+interface BoletoInterface {
+  boleto: {
+    payment_method: {
+      boleto: {
+        id: string
+        due_date: string
+        barcode: string
+      }
+    }
+  }
+}
 
 function CreditCardMessage() {
-  const {state} = useLocation()
-  console.log(state.creditCard)
+  const location = useLocation()
+  const state = location.state as CreditCardInterface
+
 
   return (
   <>
@@ -20,7 +49,9 @@ function CreditCardMessage() {
 
 
 function PaypalMessage() {
-  const {state} = useLocation()
+  const location = useLocation()
+  const state = location.state as PaypalInterface
+
   console.log(state.paypal)
 
   return (
@@ -31,22 +62,23 @@ function PaypalMessage() {
 }
 
 function BoletoMessage() {
-  const {state} = useLocation()
-  console.log(state.boleto)
+  const location = useLocation()
+  const state = location.state as BoletoInterface
+
 
   return (
   <>
     <h2 className='title my-2'>Order number: {state.boleto.payment_method.boleto.id}</h2>
-    <h3 className='fw-normal mb-4'>Pronto, agora falta apenas pagar o seu boleto.             
+    <h3 className='fw-normal mb-4'>Okay, now you just need to pay your ticket.            
     </h3>
     <h4>
-      Código para pagamento do boleto:
+      Code in order to pay the ticket:
     </h4>
     <div>
     {state.boleto.payment_method.boleto.barcode}
     </div>
     <p className='text-start'>
-      Vencimento em: {state.boleto.payment_method.boleto.due_date}
+      Due date: {state.boleto.payment_method.boleto.due_date}
     </p>
   </>
   )
@@ -59,7 +91,8 @@ const messages = [
 ]
 
 function PaymentSuccess() {
-  const {state} = useLocation()
+  const location = useLocation()
+  const state = location.state as Payment
 
   return (
     <>

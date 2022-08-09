@@ -58,7 +58,7 @@ function Footer() {
                 </Link>
               </Nav.Item>
               <Nav.Item className="fs-5 col-6">
-                <Link to="/">
+                <Link to="/shoes">
                   Top Seller Shoes
                 </Link>
               </Nav.Item>
@@ -66,12 +66,12 @@ function Footer() {
 
             <Nav className="col-12 mx-auto justify-content-between">
               <Nav.Item className="fs-5 col-6">
-                <Link to="/privacy-policy">
+                <Link to="/">
                   Homepage
                 </Link>
               </Nav.Item>
               <Nav.Item className="fs-5 col-6">
-                <Link to="/">
+                <Link to="/login">
                   Login
                 </Link>
               </Nav.Item>

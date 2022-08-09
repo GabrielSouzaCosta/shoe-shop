@@ -106,6 +106,12 @@ def credit_card_payment(request):
         response = pagseguro_credit_card_request("nike shock", 2000, request.data['name'], request.data['month'], request.data['year'], request.data['ccv'])
         pprint(response)
         serializer.save(user=request.user, amount=response['amount']['value']/100, payment_id=response['id'])
+        send_mail(
+            'Order Successfully Approved',
+            f'Your order has been successfully approved.',
+            settings.DEFAULT_FROM_EMAIL,
+            ['gabrielxs727@gmail.com']
+        )
         return Response(response, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -119,6 +125,12 @@ def boleto_payment(request):
         response = pagseguro_boleto_payment("nike shock", 2000, request.data['name'])
         pprint(response)
         serializer.save(user=request.user, amount=response['amount']['value']/100, payment_id=response['id'])
+        send_mail(
+            'Order Successfully Processed',
+            f'Your order has been successfully processed. Barcode: {response["payment_method"]["boleto"]["barcode"]}',
+            settings.DEFAULT_FROM_EMAIL,
+            ['gabrielxs727@gmail.com']
+        )
         return Response(response, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

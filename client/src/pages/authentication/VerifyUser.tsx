@@ -16,6 +16,8 @@ function VerifyUser() {
         "signature": searchParams.get('signature')
         },
         {headers: {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         "x-csrftoken": csrftoken
         }}
       )

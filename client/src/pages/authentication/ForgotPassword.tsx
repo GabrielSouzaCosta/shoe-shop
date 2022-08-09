@@ -15,6 +15,8 @@ export default function ForgotPassword() {
     setIsLoading(true)
     axios.post<AxiosResponse>(`${import.meta.env.VITE_BACKEND_URL}/accounts/send-reset-password-link/`, {login: email}, {
       headers: {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         "x-csrftoken": csrftoken
       }
     })
@@ -36,6 +38,8 @@ export default function ForgotPassword() {
       <div className='container text-dark h-75'>
         <div className='d-flex flex-column align-items-center justify-content-center text-center h-100'>
           {(!emailSent) ? 
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             <SendEmailForm handleSubmit={(e) => handleSubmit(e)}isLoading={isLoading} />
           :
           <>

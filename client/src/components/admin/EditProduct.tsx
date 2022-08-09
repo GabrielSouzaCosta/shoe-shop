@@ -11,7 +11,7 @@ interface Product {
   category: number,
   price: number,
   description: string,
-  images: []
+  images: any[]
 }
 
 const categories:string[] = [
@@ -31,7 +31,6 @@ function EditProduct() {
     description: "",
     images: []
   })
-  console.log(product.images)
 
   const { slug } = useParams()
   const navigate = useNavigate()

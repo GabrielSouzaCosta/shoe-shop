@@ -5,7 +5,7 @@ import NavBar from '../components/NavBar'
 import { useAppSelector } from '../redux/hooks/hooks'
 import { Link } from 'react-router-dom'
 
-interface OrderType {
+interface Order {
     id: number | undefined
     payment_id: string
     payment_method: string
@@ -14,10 +14,11 @@ interface OrderType {
     being_delivered: boolean | undefined
     paid: boolean | undefined
     items: any
+    amount: number
 }
 
 function OrderDetails() {
-  const [order, setOrder] = useState<OrderType>({
+  const [order, setOrder] = useState<Order>({
       id: undefined,
       payment_id: '',
       payment_method: '',
@@ -25,7 +26,8 @@ function OrderDetails() {
       received: undefined,
       being_delivered: undefined,
       paid: undefined,
-      items: [] 
+      items: [],
+      amount: 0
   })
   const { token } = useAppSelector(state => state.user)
   const { id } = useParams()
@@ -53,9 +55,12 @@ function OrderDetails() {
             <h2>
                 Ordered in: {order.ordered_date.substring(0,10)}
             </h2>
-            <h3 className='pb-2' style={{borderBottom: '1px solid #000000'}}>
+            <h3>
                 Status: {order.received? 'Received' : ''} {order.being_delivered? 'On the way' : ''} {order.paid? '': 'To be paid'}
             </h3>
+            <h4 className='pb-2' style={{borderBottom: '1px solid #000000'}}>
+                Payment Method: {order.payment_method.split('_').join(' ')}
+            </h4>
         </header>
             {order.items?.map((item: any) => {
                 return (
@@ -75,14 +80,12 @@ function OrderDetails() {
                         <h3>
                             Total: ${item.get_final_price}
                         </h3>
-                        <h4>
-                            Payment Method: {order.payment_method}
-                        </h4>
                     </div> 
                     <hr className='mt-3'></hr>
                 </div>
                 )
             })}
+            <div className='fs-1 pb-4'>TOTAL: ${order.amount.toFixed(2)}</div>
      </div>
     </div>
   )

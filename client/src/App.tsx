@@ -12,13 +12,13 @@ import VerifyUser from "./pages/authentication/VerifyUser";
 import RegisterSuccessful from "./pages/authentication/RegisterSuccessful";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
 import EditProduct from "./components/admin/EditProduct";
-
 import PaymentSuccess from "./pages/PaymentSuccess";
 import { useAppDispatch, useAppSelector } from "./redux/hooks/hooks";
 import { useEffect } from "react";
 import { profile } from "./utils/authService";
 import Profile from "./pages/Profile";
 import OrderDetails from "./pages/OrderDetails";
+import NotFound from "./pages/NotFound";
 
 
 function App() {
@@ -34,6 +34,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+          <Route path='*' element={ <NotFound /> } />
           <Route path='/' element={ <Home /> }/>
           <Route path='/shoes/:slug' element={ <ProductDetails /> } />
           <Route path='/shoes' element={ <Products /> } />
@@ -43,10 +44,10 @@ function App() {
           <Route path="/register-successful" element={ <RegisterSuccessful /> } />  
           <Route path="/verify-user" element={ <VerifyUser /> } />
           <Route path='/cart' element={ <Cart /> } />
-          <Route path='/checkout' element={token? <Checkout /> : <Navigate to='/login' /> } />
-          <Route path='/payment-success' element={token? <PaymentSuccess /> : <Navigate to='/login' /> } />
-          <Route path='/profile' element={token? <Profile /> : <Navigate to='/login' />} />
-          <Route path='/orders/:id' element={token? <OrderDetails /> : <Navigate to='/login' />} />
+          <Route path='/checkout' element={token? <Checkout /> : <Navigate to='/' /> } />
+          <Route path='/payment-success' element={token? <PaymentSuccess /> : <Navigate to='/' /> } />
+          <Route path='/profile' element={token? <Profile /> : <Navigate to='/' />} />
+          <Route path='/orders/:id' element={token? <OrderDetails /> : <Navigate to='/' />} />
           <Route path='/administration' element={token?  <Admin />: <Navigate to='/' /> } />
           <Route path='/administration/edit-product/:slug' element={token? <EditProduct/> : <Navigate to='/' /> } />
       </Routes>

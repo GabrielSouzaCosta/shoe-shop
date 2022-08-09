@@ -36,7 +36,7 @@ export const registerUser = createAsyncThunk(
 
 export const profile = createAsyncThunk(
   'user/profile',
-  async (arg  , { getState, rejectWithValue }) => {
+  async (arg  , { getState, rejectWithValue }: any) => {
     try {
       const { data } = await axios.get(import.meta.env.VITE_BACKEND_URL+'/accounts/profile/', {
       headers: {

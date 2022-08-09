@@ -7,10 +7,23 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks/hooks'
 import { removeProduct, incrementQuantity, decrementQuantity } from '../redux/slices/CartSlice'
 import { useEffect, useState } from 'react'
 import Footer from '../components/Footer'
+import axios from 'axios'
+
+type ShoesType = {
+  id: number
+  slug: string,
+  images: {
+    get_image: string,
+    get_thumbnail: string
+  }[]
+}
 
 function Cart() {
+  const { token } = useAppSelector(state => state.user)
   const [total, setTotal] = useState<number>(0)
   const cart = useAppSelector(state => state.cart.items)
+  const [suggestedShoes, setSuggestedShoes] = useState<ShoesType[]>([])
+
   const dispatch = useAppDispatch()
 
   function handleSetQuantity(product:number, value:number, quantity:number) {
@@ -28,6 +41,13 @@ function Cart() {
     })
     setTotal(newTotal)
   }
+
+  useEffect(() => {
+    if (cart.length === 0) {
+      axios.get(import.meta.env.VITE_BACKEND_URL+'/shoes/')
+      .then(res => setSuggestedShoes(res.data) )
+    }
+  }, [])
 
   useEffect(() => {
     getTotal();
@@ -104,6 +124,23 @@ function Cart() {
           <div className='h-100'>
             <div className='fs-1'>No products on your Cart...</div>
             <h3 className='fs-1 mt-5 fw-bold text-center text-uppercase title'>These may be of your interest</h3>
+            <div className="row justify-content-center align-items-center">
+              <div className="col-6 col-md-4 col-lg-3 mb-2">
+                <Link to={'/shoes/'+suggestedShoes[0]?.slug}>
+                  <img className='w-100' style={{maxHeight: '500px'}} src={import.meta.env.VITE_BACKEND_URL_BASE+suggestedShoes[0]?.images[0].get_image} />
+                </Link>
+              </div>
+              <div className="col-6 col-md-4 col-lg-3 mb-2">
+                <Link to={'/shoes/'+suggestedShoes[1]?.slug}>
+                  <img className='w-100' style={{maxHeight: '500px'}} src={import.meta.env.VITE_BACKEND_URL_BASE+suggestedShoes[1]?.images[0].get_image} />
+                </Link>
+              </div>
+              <div className="col-6 col-md-4 col-lg-3">
+                <Link to={'/shoes/'+suggestedShoes[0]?.slug}>
+                  <img className='w-100' style={{maxHeight: '500px'}} src={import.meta.env.VITE_BACKEND_URL_BASE+suggestedShoes[0]?.images[1]?.get_image} />
+                </Link>
+              </div>
+            </div>  
           </div>
         }
         
@@ -113,12 +150,16 @@ function Cart() {
           <h2 className='fs-1 text-uppercase'>
             Total: ${total.toFixed(2)}
           </h2> 
-          <Link to="/checkout">
-            <Button variant="outline-danger" className='fs-1 fw-bold text-dark border border-4 border-dark mt-3 text-uppercase title'>
-              Checkout
-              <FontAwesomeIcon className='ms-3' icon={faCircleArrowRight} />
-            </Button>
-          </Link>
+          {cart.length > 0?
+            <Link to={token ? "/checkout": "/login"}>
+              <Button variant="outline-danger" className='fs-1 fw-bold text-dark border border-4 border-dark mt-3 text-uppercase title'>
+                Checkout
+                <FontAwesomeIcon className='ms-3' icon={faCircleArrowRight} />
+              </Button>
+            </Link>
+          :
+            ""
+          }
         </div>
 
       </Container>

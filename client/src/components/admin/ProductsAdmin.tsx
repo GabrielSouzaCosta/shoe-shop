@@ -10,7 +10,7 @@ interface NewShoes {
   category?: number,
   price?: number,
   description: string,
-  file?: []
+  file?: any[]
 }
 
 type Shoe = {
@@ -31,7 +31,7 @@ const categories:string[] = [
 ]
 
 function ProductsAdmin() {
-  const [shoes, setShoes] = useState<[]>([]);
+  const [shoes, setShoes] = useState<Shoe[]>([]);
   const [newShoes, setNewShoes] = useState<NewShoes>({
     name: "",
     category: 1,
@@ -85,6 +85,8 @@ function ProductsAdmin() {
   function handleUploadChange(e: React.FormEvent<HTMLInputElement>) {
     const targetFiles = e.currentTarget.files
     console.log(targetFiles)  
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     const targetFilesObject = [...targetFiles]
     setNewShoes({...newShoes, file: targetFilesObject})
   }

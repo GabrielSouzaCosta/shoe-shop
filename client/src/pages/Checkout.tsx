@@ -8,7 +8,7 @@ import Paypal from '../components/Paypal'
 import { Toaster } from 'react-hot-toast';
 import CreditCard from '../components/CreditCard'
 import Boleto from '../components/Boleto'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 type ShippingTypes = {
   Codigo?: number
@@ -25,6 +25,7 @@ type ShippingMethod = {
 type Coupon = {
   code: string,
   amount: number,
+  valid?: boolean
 }
 
 type Item = {
@@ -56,12 +57,12 @@ function Checkout() {
   const navigate = useNavigate()
 
   const paymentMethods = [
-    <CreditCard />,
+    <CreditCard shippingMethod={shippingMethod} />,
     <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID, currency: "BRL" }}>
       <Toaster />
       <Paypal value={"100.00"}/>
     </PayPalScriptProvider>,
-    <Boleto />
+    <Boleto shippingMethod={shippingMethod}/>
   ]
 
   function getTotal() {
@@ -104,7 +105,9 @@ function Checkout() {
     e.preventDefault()
     const findCoupon = coupons.find(({code}) => code === appliedCoupon.code)
     if (findCoupon) {
-      setAppliedCoupon(findCoupon)
+      setAppliedCoupon({...findCoupon, valid: true})
+    } else {
+      setAppliedCoupon({...appliedCoupon, valid:false})
     }
   }
 
@@ -161,18 +164,29 @@ function Checkout() {
                 value={appliedCoupon.code}
                 onChange={(e:React.ChangeEvent<HTMLInputElement>) => setAppliedCoupon({...appliedCoupon, code: e.currentTarget.value.toUpperCase()})}
                 placeholder='e.g SHOES10'
-                className='border rounded-0 text-dark'/>
+                className='border rounded-0 text-dark'
+                required
+                />
               </div>
               <div className='col-md-4 ms-1 px-0 col-lg-2'>
                 <Button type="submit" variant='warning text-white'>
                   Apply
                 </Button>
               </div>
+              <Form.Text>
+                  {appliedCoupon.valid === false ? 'Invalid or expired coupon': ''}
+              </Form.Text>
+              <div className='fs-5 d-block mt-3 text-uppercase title fw-bold'>
+                Applied coupon
+              </div>
+              <span className='ms-2 rounded-pill bg-warning text-light col-auto'>
+                {appliedCoupon.code} = discount of %{appliedCoupon.amount}
+              </span>
               <div className='d-block mt-3 text-uppercase title'>
                 <span className='fw-bold fs-5'>Applicable coupons</span>
               {coupons?.map((coupon) => 
-                <div className='mt-1 col-2'>
-                  <div className=' bg-light p-2'>
+                <div className='mt-1 mb-2'>
+                  <div className='d-inline bg-light p-1'>
                     {coupon.code}
                   </div> 
                 </div>
@@ -200,7 +214,7 @@ function Checkout() {
                   required
                 />
               </div>
-              
+            </Form>
               {loading ? 
               <Spinner animation="border" role="status" className='ms-2 mb-md-2' /> 
               : 
@@ -209,7 +223,6 @@ function Checkout() {
               </Button>
               }
               
-            </Form>
               {(Object.keys(shippingDetails).length > 0) ? 
               shippingDetails.map((shipping:ShippingTypes, i:number) => {
                 const valor = Number(shipping.Valor?.split(',').join('.'))
@@ -234,7 +247,6 @@ function Checkout() {
                 ""
               }
             <div className='fs-5 text-danger ms-2 fw-bolder'>{errorMsg}</div>
-
             {(shippingDetails[0]) ?
               <div className='mt-2 fs-5'>{shippingDetails[0].MsgErro}</div>
             :
