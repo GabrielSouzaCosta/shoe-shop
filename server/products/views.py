@@ -1,5 +1,3 @@
-from multiprocessing import context
-from unicodedata import name
 from django.shortcuts import get_object_or_404
 from rest_framework.views import Response, APIView
 from rest_framework.permissions import IsAdminUser, AllowAny
