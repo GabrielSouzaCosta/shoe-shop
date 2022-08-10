@@ -6,6 +6,7 @@ ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
 
 COPY . /server
+COPY .env /server
 COPY ./scripts /scripts
 
 WORKDIR /server
