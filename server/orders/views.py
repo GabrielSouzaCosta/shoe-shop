@@ -101,9 +101,11 @@ class CouponViewSet(viewsets.ViewSet):
 @permission_classes([IsAuthenticated,])
 def credit_card_payment(request):
     serializer = OrderSerializer(data=request.data)
+    shipping_info = request.data['shippingInfo']
+    print(shipping_info)
 
     if serializer.is_valid():
-        response = pagseguro_credit_card_request("nike shock", 2000, request.data['name'], request.data['month'], request.data['year'], request.data['ccv'])
+        response = pagseguro_credit_card_request(2000, request.data['name'], request.data['month'], request.data['year'], request.data['ccv'])
         pprint(response)
         serializer.save(user=request.user, amount=response['amount']['value']/100, payment_id=response['id'])
         send_mail(
@@ -120,9 +122,10 @@ def credit_card_payment(request):
 @permission_classes([IsAuthenticated,])
 def boleto_payment(request):
     serializer = OrderSerializer(data=request.data)
+    shipping_info = request.data['shippingInfo']
     
     if serializer.is_valid():
-        response = pagseguro_boleto_payment("nike shock", 2000, request.data['name'])
+        response = pagseguro_boleto_payment("nike shock", 2000, shipping_info)
         pprint(response)
         serializer.save(user=request.user, amount=response['amount']['value']/100, payment_id=response['id'])
         send_mail(
@@ -171,9 +174,12 @@ class ProcessWebhookView(View):
         if event_type == CHECKOUT_ORDER_APPROVED:
             customer_email = webhook_event["resource"]["payer"]["email_address"]
             product_link = 'http://127.0.0.1:5173/shoes'
-            send_mail(subject="Order Success",
+            send_mail(
+            subject="Order Success",
             from_email=settings.DEFAULT_FROM_EMAIL,
             message=f"Thank you for purchasing our product. Here is the link: {product_link}",
-            recipient_list=[customer_email])
+            recipient_list=[customer_email]
+            )
+
 
         return HttpResponse()

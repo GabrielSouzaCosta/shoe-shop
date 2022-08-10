@@ -7,13 +7,19 @@ import { clearCart } from '../redux/slices/CartSlice'
 import getCookie from '../utils/getCookie'
 
 interface Shipping {
-  shippingMethod: {
-      method: string
-      value: number
+  shippingInfo: {
+    email: string
+    name: string
+    address: string
+    city: string
+    phone: string
+    zipcode: string
+    method: string
+    value: number
   }
 }
 
-function Boleto({shippingMethod}: Shipping) {
+function Boleto({shippingInfo}: Shipping) {
   const items = useAppSelector(state => state.cart.items)
   const [disabled, setDisabled] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
@@ -24,9 +30,9 @@ function Boleto({shippingMethod}: Shipping) {
   async function handleBoletoPayment() {
     const csrftoken = getCookie("csrftoken")
     setDisabled(true)
-    if (shippingMethod.method) {
+    if (shippingInfo.method) {
       setErrorMsg('')
-      await axios.post(import.meta.env.VITE_BACKEND_URL+'/boleto/', {name: "Gabriel Souza Costa", payment_method: 'BOLETO', items}, {
+      await axios.post(import.meta.env.VITE_BACKEND_URL+'/boleto/', {payment_method: 'BOLETO', items, shippingInfo}, {
         headers: {
           'Authorization': 'Token '+sessionStorage.getItem('token'),
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -49,7 +55,7 @@ function Boleto({shippingMethod}: Shipping) {
 
   return (
     <div>
-        <h3>You will be able to view or print the slip after completing the order. The expiration date is 4 calendar days after the order is completed. After this date, it will expire.</h3>
+        <h5>You will be able to view or print the slip after completing the order. The expiration date is 4 calendar days after the order is completed. After this date, it will expire.</h5>
         <div className='text-muted text-center'>
             {errorMsg}
         </div>

@@ -9,6 +9,9 @@ import { Toaster } from 'react-hot-toast';
 import CreditCard from '../components/CreditCard'
 import Boleto from '../components/Boleto'
 import { useNavigate } from 'react-router-dom'
+import { setConstantValue } from 'typescript'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRightLong } from '@fortawesome/free-solid-svg-icons'
 
 type ShippingTypes = {
   Codigo?: number
@@ -17,7 +20,13 @@ type ShippingTypes = {
   MsgErro?: string
 }
 
-type ShippingMethod = {
+interface Shipping {
+  email: string
+  name: string
+  address: string
+  city: string
+  phone: string
+  zipcode: string
   method: string
   value: number
 }
@@ -42,45 +51,44 @@ interface ShippingResponse extends AxiosResponse {
 
 function Checkout() {
   const cart = useAppSelector(state => state.cart.items)
-  const [zipcode, setZipcode] = useState<string>("")
   const [coupons, setCoupons] = useState<Coupon[]>([])
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon>({code: "", amount: 0})
+
   const [shippingDetails, setShippingDetails] = useState<ShippingTypes[]>([])
-  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>({
+  const [shippingInfo, setShippingInfo] = useState<Shipping>({
+    email: "",
+    name: "",
+    address: "",
+    city: "",
+    phone: "",
+    zipcode: "",
     method: "",
     value: 0
   })
+
   const [paymentMethod, setPaymentMethod] = useState<number>(0)
+  const [baseValue, setBaseValue] = useState<number>(0)
+  const [total, setTotal] = useState<number>(0)
+
   const [errorMsg, setErrorMsg] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
 
   const navigate = useNavigate()
 
   const paymentMethods = [
-    <CreditCard shippingMethod={shippingMethod} />,
+    <CreditCard shippingInfo={shippingInfo} />,
     <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID, currency: "BRL" }}>
       <Toaster />
-      <Paypal value={"100.00"}/>
+      <Paypal shippingInfo={shippingInfo}/>
     </PayPalScriptProvider>,
-    <Boleto shippingMethod={shippingMethod}/>
-  ]
-
-  function getTotal() {
-    let total = 0;
-    cart.forEach((item: Item) => {
-      total += item.price * item.quantity
-    })
-    if (appliedCoupon.amount) {
-      total *= (100 - appliedCoupon.amount) / 100
-    }
-    return total
-  }  
+    <Boleto shippingInfo={shippingInfo}/>
+  ]  
   
   async function calcularFrete(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (zipcode.length === 9) {
+    if (shippingInfo.zipcode.length === 9) {
       setLoading(true)
-      await axios.get<ShippingResponse>(import.meta.env.VITE_BACKEND_URL+'/shipping-details/?zipcode='+zipcode, {
+      await axios.get<ShippingResponse>(import.meta.env.VITE_BACKEND_URL+'/shipping-details/?zipcode='+shippingInfo.zipcode, {
         headers: {
           'Authorization': 'Token '+sessionStorage.getItem('token')
         }
@@ -95,11 +103,6 @@ function Checkout() {
       setErrorMsg("Invalid Zipcode, try again")
     }
   }
-
-  function handleZipcodeChange(e: React.ChangeEvent<HTMLInputElement>) {
-      setZipcode(e.currentTarget.value)
-  }
-
 
   function applyCoupon(e:React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -119,6 +122,24 @@ function Checkout() {
       res => setCoupons(res.data)
     )
   }, [])
+
+  useEffect(() => {
+    let total = 0;
+
+    cart.forEach((item: Item) => {
+      total += item.price * item.quantity
+    })
+    setBaseValue(total)
+
+    if (shippingInfo.value) {
+      total += shippingInfo.value
+    }
+    if (appliedCoupon.amount) {
+      total *= (100 - appliedCoupon.amount) / 100
+    }
+
+    setTotal(total)
+  }, [appliedCoupon, shippingInfo])
 
   return (
   <>
@@ -159,7 +180,7 @@ function Checkout() {
               Coupons
             </h2>
             <Form onSubmit={applyCoupon} className="row align-items-center">
-              <div className='col-md-4 px-0 col-lg-2'>
+              <div className='col-md-4 px-0 col-lg-2 mb-1 mb-md-0'>
                 <Form.Control
                 value={appliedCoupon.code}
                 onChange={(e:React.ChangeEvent<HTMLInputElement>) => setAppliedCoupon({...appliedCoupon, code: e.currentTarget.value.toUpperCase()})}
@@ -176,14 +197,20 @@ function Checkout() {
               <Form.Text>
                   {appliedCoupon.valid === false ? 'Invalid or expired coupon': ''}
               </Form.Text>
-              <div className='fs-5 d-block mt-3 text-uppercase title fw-bold'>
-                Applied coupon
-              </div>
-              <span className='ms-2 rounded-pill bg-warning text-light col-auto'>
-                {appliedCoupon.code} = discount of %{appliedCoupon.amount}
-              </span>
-              <div className='d-block mt-3 text-uppercase title'>
-                <span className='fw-bold fs-5'>Applicable coupons</span>
+              {(appliedCoupon.valid) ?
+              <>
+                <div className='fs-5 d-block mt-3 text-uppercase title fw-bold'>
+                  Applied coupon
+                </div>
+                <span className='ms-2 rounded-pill bg-warning text-light col-auto'>
+                  {appliedCoupon.code} = discount of %{appliedCoupon.amount}
+                </span>
+              </>
+              :
+              ""
+              }
+              <div className='mt-3 text-uppercase title'>
+                <h5 className='fw-bold fs-5'>Valid coupons</h5>
               {coupons?.map((coupon) => 
                 <div className='mt-1 mb-2'>
                   <div className='d-inline bg-light p-1'>
@@ -201,27 +228,86 @@ function Checkout() {
               Shipping
             </h2>
  
-            <Form onSubmit={calcularFrete} className="row align-items-center" >
-              <Form.Label className='col-auto fs-5 mx-1 pe-1 mb-2'>
-                Zipcode:
-              </Form.Label>
-              <div className='col-md-4 px-0 col-lg-2'>
+            <Form className="row align-items-center title fw-bold" >
+            <div className="row">
+              <div className="col-12 mb-1">
+                  <Form.Label className='mb-1'>
+                    Email Address
+                  </Form.Label>
+                  <Form.Control
+                  className='text-dark mb-1'
+                  value={shippingInfo.email}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShippingInfo({...shippingInfo, email: e.currentTarget.value})}
+                  placeholder='youremail@email.com'
+                  required />
+              </div>
+              <div className="col-12 col-md-6 mb-1">
+                <Form.Label className='mb-1'>
+                  Full Name
+                </Form.Label>
                 <Form.Control
-                  value={zipcode}
-                  onChange={handleZipcodeChange}
-                  className='border-0 rounded-pill text-dark mb-2'
-                  placeholder="00000-000"
-                  required
+                value={shippingInfo.name}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShippingInfo({...shippingInfo, name: e.currentTarget.value})}
+                className='mb-1 text-dark'
+                placeholder='Your name..'
                 />
               </div>
+              <div className="col-12 col-md-6 mb-1">
+                <Form.Label>
+                  Address
+                </Form.Label>
+                <Form.Control
+                value={shippingInfo.address}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShippingInfo({...shippingInfo, address: e.currentTarget.value})}
+                className='mb-1 text-dark'
+                placeholder='e.g. Liberty street, 102'
+                />
+              </div>
+              <div className="col-12 col-md-6 mb-1">
+                <Form.Label>
+                  City
+                </Form.Label>
+                <Form.Control
+                value={shippingInfo.city}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShippingInfo({...shippingInfo, city: e.currentTarget.value})}
+                className='mb-1 text-dark'
+                placeholder='New York..'
+                />
+              </div>
+              <div className="col-12 col-md-6 mb-3">
+                <Form.Label>
+                  Phone
+                </Form.Label>
+                <Form.Control
+                className='text-dark'
+                value={shippingInfo.phone}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShippingInfo({...shippingInfo, phone: e.currentTarget.value})}
+                placeholder='(xx) xxxxx-xxxx'
+                />
+              </div>
+            </div>
             </Form>
-              {loading ? 
-              <Spinner animation="border" role="status" className='ms-2 mb-md-2' /> 
-              : 
-              <Button type='submit' className='col-auto ms-2 mb-md-2 rounded title fw-bold fs-5 p-1 px-2'>
-              SUBMIT
-              </Button>
-              }
+            <Form onSubmit={calcularFrete}>
+              <div className='col-11 col-md-4 col-lg-2'>
+                <Form.Label className='col-auto fs-5 pe-2 mb-2'>
+                  Zipcode:
+                </Form.Label>
+                <Form.Control
+                  value={shippingInfo.zipcode}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShippingInfo({...shippingInfo, zipcode: e.currentTarget.value})}
+                  className='border-0 rounded-0 text-dark mb-2'
+                  placeholder="00000-000"
+                  required
+                  />
+              </div>
+                {loading ? 
+                <Spinner animation="border" role="status" className='ms-2 mb-md-2' /> 
+                : 
+                <Button type="submit" className='col-auto ms-2 mb-md-2 rounded title fw-bold fs-5 p-1 px-2'>
+                SUBMIT
+                </Button>
+                }
+            </Form>
               
               {(Object.keys(shippingDetails).length > 0) ? 
               shippingDetails.map((shipping:ShippingTypes, i:number) => {
@@ -232,9 +318,9 @@ function Checkout() {
                       <input 
                       className="form-check-input ms-0" 
                       required value={i === 0 ? "SEDEX":"PAC"} 
-                      onChange={ (e) => setShippingMethod({method: e.currentTarget.value, value: valor}) } 
+                      onChange={ (e) => setShippingInfo({...shippingInfo, method: e.currentTarget.value, value: valor}) } 
                       type="radio" 
-                      name="shippingMethod" 
+                      name="shipping" 
                       />
                       <label className='ms-2'>
                         {i === 0 ? "SEDEX":"PAC"}: ${shipping.Valor} ({shipping.PrazoEntrega} dias úteis)
@@ -253,11 +339,26 @@ function Checkout() {
               ""
             }
             <div className='row mt-3'>
-              <hr className='col-10' style={{border: "2px solid #000000"}}></hr>
+              <hr className='col-10 mb-2' style={{border: "2px solid #000000"}}></hr>
             </div>
-            <div className='fs-1'>
-              Total: ${getTotal().toFixed(2)} + ${shippingMethod.value.toFixed(2)}(shipping) {appliedCoupon.amount? `- %${appliedCoupon.amount}`: '' } = ${(getTotal() + shippingMethod.value).toFixed(2)}
+            <div className='fs-2'>
+              Subtotal:  ${ baseValue.toFixed(2) }
+            </div>  
+            <div className='fs-2'>
+              Shipping: ${shippingInfo.value.toFixed(2)}
             </div>
+            {(appliedCoupon.amount) ?
+              <div className='fs-2'>
+                - %{appliedCoupon.amount} discount
+              </div>
+            :
+              ""
+            }
+            <hr className='col-10 border border-2 my-1 border-dark'/>
+            <div className='fs-2'>
+              Total: ${total.toFixed(2)}
+            </div>
+
           </div>
           <div className='fs-2 col-12 col-md-10 col-lg-5 py-4 justify-content-center mx-auto' style={{minHeight: "700px"}} >
               <div className='card p-4 bg-light'>

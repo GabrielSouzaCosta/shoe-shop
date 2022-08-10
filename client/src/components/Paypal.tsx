@@ -4,11 +4,20 @@ import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 type Props = {
-    value: string
+    shippingInfo: {
+        email: string
+        name: string
+        address: string
+        city: string
+        phone: string
+        zipcode: string
+        method: string
+        value: number
+        }
 }
 
 function Paypal({
-    value
+    shippingInfo
 }: Props) {
   const navigate = useNavigate()
 
@@ -24,7 +33,7 @@ function Paypal({
                 purchase_units: [
                     {
                         amount: {
-                            value: value
+                            value: shippingInfo.value.toString()
                         }
                     }
                 ]

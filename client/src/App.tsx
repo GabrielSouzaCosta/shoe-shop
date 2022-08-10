@@ -34,7 +34,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-          <Route path='*' element={ <NotFound /> } />
           <Route path='/' element={ <Home /> }/>
           <Route path='/shoes/:slug' element={ <ProductDetails /> } />
           <Route path='/shoes' element={ <Products /> } />
@@ -50,6 +49,7 @@ function App() {
           <Route path='/orders/:id' element={token? <OrderDetails /> : <Navigate to='/' />} />
           <Route path='/administration' element={token?  <Admin />: <Navigate to='/' /> } />
           <Route path='/administration/edit-product/:slug' element={token? <EditProduct/> : <Navigate to='/' /> } />
+          <Route path='*' element={ <NotFound /> } />
       </Routes>
     </BrowserRouter>
   )

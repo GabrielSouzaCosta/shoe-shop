@@ -12,10 +12,10 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   server:
-    build: ./server
+    build:
+      context: ./server
     volumes:
-      - "./server:/app"
-    command: python manage.py runserver 0.0.0.0:8000
+      - ./server:/server
     restart: always
     ports:
       - "8000:8000"

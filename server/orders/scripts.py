@@ -11,10 +11,10 @@ headers = {
   'x-idempotency-key': ''
 }
 
-def pagseguro_credit_card_request(product, value, name, exp_month, exp_year, ccv):
+def pagseguro_credit_card_request(value, name, exp_month, exp_year, ccv):
     payload = json.dumps({
   "reference_id": "ex-00001",
-  "description": product,
+  "description": "Shoes from Breathe Shoes",
   "amount": {
     "value": value,
     "currency": "BRL"
@@ -38,7 +38,7 @@ def pagseguro_credit_card_request(product, value, name, exp_month, exp_year, ccv
     return json.loads(response.text)
 
 
-def pagseguro_boleto_payment(product, value, name):
+def pagseguro_boleto_payment(product, value, shipping_info):
     payload = json.dumps({
   "reference_id": "ex-00001",
   "description": product,
@@ -55,17 +55,17 @@ def pagseguro_boleto_payment(product, value, name):
       "holder": {
         "address": {
           "country": "Brasil",
-          "street": "rua alvarenga",
+          "street": shipping_info['adress'],
           "number": "150",
           "locality": "São José",
-          "city": "Pouso Alegre",
+          "city": shipping_info['city'],
           "region": "Minas Gerais",
           "region_code": "MG",
-          "postal_code": "37554024"
+          "postal_code": shipping_info['zipcode']
         },
         "tax_id": "22222222222",
-        "email": "gabrielsscosta2010@hotmail.com",
-        "name": name.upper()
+        "email": shipping_info['email'],
+        "name": shipping_info['name']
       }
     }
   }

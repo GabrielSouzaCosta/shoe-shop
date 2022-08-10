@@ -28,9 +28,9 @@ function Filter (
   return (
   <>
       <ToggleButtonGroup className='text-uppercase row w-100 px-3 my-1 mx-auto' type="radio" name="options">
-        <div className='d-flex m-2 align-items-end'>
-            <h3 className='btn btn-warning rounded text-light fs-3 text-start text-md-center mx-md-auto me-auto'>categories</h3>
-            <div className='position-absolute end-0 top-0 pt-3 pe-3'>
+        <div className='d-flex m-2 align-items-center'>
+            <h3 className='btn btn-warning rounded text-light fs-4 me-auto'>categories</h3>
+            <div className='d-flex align-items-center'>
               <Button variant="dark" onClick={handleClearFilter} className="me-2 text-uppercase rounded-pill fw-bold">
                 Clear
               </Button>

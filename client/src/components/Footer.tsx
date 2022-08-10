@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 function Footer() {
   return (
     <Nav as="footer" className="flex-column text-light bg-dark" >
-      <Container fluid className="px-5 py-2">
+      <Container fluid className="px-4 px-md-5 py-2">
         <Row>
           <Nav className="flex-column col-12 col-md-6 col-lg-4">
             <Nav.Item as="h2" className="pt-3">

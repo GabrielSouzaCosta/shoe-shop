@@ -75,6 +75,8 @@ class ProductsListView(viewsets.ViewSet):
         return [AllowAny()]
 
 class GetShippingInfoView(APIView):
+  permission_classes = [AllowAny]
+
   def get(self, request):
     zipcode = request.query_params.get('zipcode')
     response = get_shipping(zipcode)  

@@ -26,6 +26,7 @@ function Products() {
   const [shoes, setShoes] = useState<[]>([]);
   const [showFilter, setShowFilter] = useState(false);
   const [filter, setFilter] = useState<number>(0);
+  const [pageLoaded, setPageLoaded] = useState<boolean>(false)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const product = searchParams.get('product')
@@ -52,6 +53,7 @@ function Products() {
         response = await axios.get(import.meta.env.VITE_BACKEND_URL+'/shoes/')
       }
       const data = response.data
+      setPageLoaded(true)
       setShoes(data.map((item:any) => {
         return {product: item.id, name: item.name, slug: item.slug, category: item.category, price: item.price, images: item.images}
       }))
@@ -86,7 +88,7 @@ function Products() {
                     })
             }
 
-            {(shoes.length === 0) ? 
+            {(shoes.length === 0 && pageLoaded) ? 
               <>
                 <div className='fs-2 text-center text-dark mt-5 text-uppercase title'>
                   Sorry, there's nothing to see here, try another search.

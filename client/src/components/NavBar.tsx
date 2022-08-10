@@ -38,8 +38,8 @@ function NavBar() {
   return (
     <Navbar bg="dark" expand="lg" className="sticky-top justify-content-center">
       <Container fluid>
-        <Nav className="flex-row align-items-center justify-content-center w-50 ms-auto ps-0 ps-md-5 fs-4 text-uppercase">
-          <Navbar.Brand as="h1" className="text-white m-0 ms-5 ps-3 fs-1 brand">
+        <Nav className="flex-row align-items-center justify-content-center w-50 mx-auto pe-2 fs-4  text-uppercase">
+          <Navbar.Brand as="h1" className="text-white m-0 ps-3 fs-1 brand">
             <NavLink to="/" className="custom-brand-link">
               Breathe Shoes
             </NavLink>
@@ -51,21 +51,18 @@ function NavBar() {
             Store
           </NavLink>
         </Nav>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" className="ms-auto" >
-          <FontAwesomeIcon className="text-white" icon={faBars} />
-        </Navbar.Toggle>
-        <Nav className="flex-column mx-auto mx-lg-0 align-items-center justify-content-center fs-4 text-uppercase">
-          <Navbar.Collapse id="basic-navbar-nav">
-          <Nav.Item as='form' onSubmit={searchProduct} className="position-relative text-danger w-50 me-2">
+        <Nav className="flex-column w-100 align-items-center align-items-md-end justify-content-center fs-4 text-uppercase ms-auto">
+          <Navbar.Collapse id="basic-navbar-nav" className="text-center">
+          <Nav.Item as='form' onSubmit={searchProduct} className="position-relative text-danger w-100 text-center">
             <input 
             value={filterValue}
             onChange={handleFilterChange}
             type="search" 
-            placeholder="nike FN.." 
-            className="mb-1 title fs-5 ps-2 w-100 rounded-pill border-0"
+            placeholder="nike.." 
+            className="mb-1 title fs-6 ps-2 w-100 rounded-pill border-0"
             />
-            <Button type="submit" className="position-absolute end-0 pe-2 pt-2 transform-middle border-0" style={{backgroundColor: 'transparent'}}>
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="text-danger"/>
+            <Button type="submit" className="position-absolute end-0 pe-2 pt-2 border-0" style={{backgroundColor: 'transparent'}}>
+              <FontAwesomeIcon icon={faMagnifyingGlass} className="text-danger pt-1 fs-6"/>
             </Button>
             <div className="d-flex flex-column position-absolute bg-light text-dark title justity-content-center end-0 start-0">
             {shoes.filter((shoe: {name: string}) => {
@@ -105,7 +102,7 @@ function NavBar() {
             </span>
           </NavLink>
           {(token) ? 
-            <NavLink to="/profile" className="d-none d-md-block pe-2 me-1 fs-2">
+            <NavLink to="/profile" className="pe-2 me-1 fs-2">
               <FontAwesomeIcon icon={faUserCircle} />
             </NavLink>  
           :
@@ -123,6 +120,9 @@ function NavBar() {
           }
         </Navbar.Collapse>
         </Nav>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" className="position-absolute end-0  pe-2" >
+          <FontAwesomeIcon className="text-white" icon={faBars} />
+        </Navbar.Toggle>
       </Container>
     </Navbar>
   )

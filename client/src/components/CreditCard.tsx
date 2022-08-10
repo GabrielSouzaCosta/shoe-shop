@@ -7,7 +7,13 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks/hooks'
 import { clearCart } from '../redux/slices/CartSlice'
 
 interface Shipping {
-    shippingMethod: {
+    shippingInfo: {
+        email: string
+        name: string
+        address: string
+        city: string
+        phone: string
+        zipcode: string
         method: string
         value: number
     }
@@ -26,7 +32,7 @@ function range(start:number, end:number) {
 }
 
 function CreditCard(
-    {shippingMethod}: Shipping
+    {shippingInfo}: Shipping
 ) {
   const items = useAppSelector(state => state.cart.items)
   const [disabled, setDisabled] = useState(false)
@@ -48,9 +54,9 @@ function CreditCard(
     e.preventDefault()
     setDisabled(true)
 
-    if (shippingMethod.method) {
+    if (shippingInfo.method) {
         setErrorMsg('')
-        await axios.post(import.meta.env.VITE_BACKEND_URL+'/credit-card/', {...card, items, payment_method: 'CREDIT_CARD'}, {
+        await axios.post(import.meta.env.VITE_BACKEND_URL+'/credit-card/', {...card, items, payment_method: 'CREDIT_CARD', shippingInfo}, {
             headers: {
                 'Authorization': 'Token '+sessionStorage.getItem('token'),
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -71,9 +77,9 @@ function CreditCard(
   }
   
   return (
-    <Form onSubmit={handlePurchase} className="row px-4 mb-2">
+    <Form onSubmit={handlePurchase} className="row px-0 px-md-4 mb-2">
         <div className="col-12">
-            <Form.Label className='mb-0 mt-3'>
+            <Form.Label className='fs-5 mb-0 mt-3'>
             Name on Card
             </Form.Label>
             <Form.Control 
@@ -84,8 +90,8 @@ function CreditCard(
             />
         </div>
         
-        <div className="col-12 mb-3">
-            <Form.Label className='mb-0 mt-3'>
+        <div className="col-12 mb-1 mb-md-3 ">
+            <Form.Label className='fs-5 mb-0 mt-3'>
             Card Number
             </Form.Label>
             <Form.Control 
@@ -97,7 +103,7 @@ function CreditCard(
         </div>
 
         
-        <div className='col-7'>
+        <div className='col-12 col-md-7'>
             <div className="row w-100">
                 <Form.Label className='mb-0'>
                     Expiration Date
@@ -131,7 +137,7 @@ function CreditCard(
             </div>
         </div>
 
-        <div className="col-5">
+        <div className="col-12 mt-1 mt-md-0 col-md-5">
             <Form.Label className='mb-0' >
             CCV
             </Form.Label>
@@ -145,7 +151,7 @@ function CreditCard(
         <div className='text-muted text-center'>
             {errorMsg}
         </div>
-        <Button type="submit" disabled={disabled} variant="dark" className="col-6 mt-4 text-center mx-auto text-uppercase fs-3 title rounded">
+        <Button type="submit" disabled={disabled} variant="dark" className="col-auto mt-4 text-center mx-auto text-uppercase fs-3 title rounded">
             {disabled ? 'Loading..' : 'Confirm Order'}
         </Button>
     </Form>

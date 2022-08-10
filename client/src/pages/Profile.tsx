@@ -40,12 +40,12 @@ function Profile() {
   return (
     <div className='min-vh-100 bg-light text-dark'>
         <NavBar />
-        <header className='d-flex justify-content-center align-items-center text-center mt-3 position-relative'>
+        <header className='d-flex flex-column justify-content-center align-items-center text-center mt-3 position-relative'>
             <FontAwesomeIcon icon={faPerson} className='fs-1 me-2 rounded-circle border border-dark p-2'/>
             <h1 className='title mb-0'>MY PROFILE</h1>
             {userInfo.is_superuser ? 
-                <Link to='/administration' className='position-absolute end-0 pe-1'>
-                    <Button variant='dark' className=' text-uppercase'>
+                <Link to='/administration' className='mt-1'>
+                    <Button variant='dark' className='text-uppercase'>
                         Admin Dashboard
                     </Button>
                 </Link>
