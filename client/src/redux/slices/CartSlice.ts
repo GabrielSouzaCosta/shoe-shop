@@ -42,7 +42,6 @@ export const cartSlice = createSlice({
                 if (item.product === action.payload.product) {
                     return item
                 }
-                return null
             })
 
             if (hasItem.length > 0) {

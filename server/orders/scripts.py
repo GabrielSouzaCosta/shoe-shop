@@ -55,7 +55,7 @@ def pagseguro_boleto_payment(product, value, shipping_info):
       "holder": {
         "address": {
           "country": "Brasil",
-          "street": shipping_info['adress'],
+          "street": shipping_info['address'],
           "number": "150",
           "locality": "São José",
           "city": shipping_info['city'],

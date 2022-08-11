@@ -19,6 +19,7 @@ import { profile } from "./utils/authService";
 import Profile from "./pages/Profile";
 import OrderDetails from "./pages/OrderDetails";
 import NotFound from "./pages/NotFound";
+import ResetPassword from "./pages/authentication/ResetPassword";
 
 
 function App() {
@@ -37,8 +38,9 @@ function App() {
           <Route path='/' element={ <Home /> }/>
           <Route path='/shoes/:slug' element={ <ProductDetails /> } />
           <Route path='/shoes' element={ <Products /> } />
-          <Route path='/login' element={token? <Navigate to='/' /> : <LoginPage /> } />
+          <Route path='/login' element={ <LoginPage /> } />
           <Route path='/forgot-password' element={ <ForgotPassword /> } />
+          <Route path='/reset-password' element={<ResetPassword />} />
           <Route path='/register' element={token? <Navigate to='/' /> : <RegisterPage /> } />
           <Route path="/register-successful" element={ <RegisterSuccessful /> } />  
           <Route path="/verify-user" element={ <VerifyUser /> } />

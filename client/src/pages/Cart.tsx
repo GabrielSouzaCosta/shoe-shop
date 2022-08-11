@@ -67,7 +67,7 @@ function Cart() {
             return (
               <div className='row justify-content-evenly h-100 mb-3'>
                 <div className='col-9 mx-auto col-lg-2 text-center'>
-                  <img src={import.meta.env.VITE_BACKEND_URL_BASE+item.image} className='img-fluid' />
+                  <img src={item.image} className='img-fluid' />
                 </div>
                 <div className='col-6 mx-auto text-center pt-3 pt-lg-0 col-lg-3 align-self-center'>
                   <h2>
@@ -127,17 +127,17 @@ function Cart() {
             <div className="row justify-content-center align-items-center">
               <div className="col-6 col-md-4 col-lg-3 mb-2">
                 <Link to={'/shoes/'+suggestedShoes[0]?.slug}>
-                  <img className='w-100' style={{maxHeight: '500px'}} src={import.meta.env.VITE_BACKEND_URL_BASE+suggestedShoes[0]?.images[0].get_image} />
+                  <img className='w-100' style={{maxHeight: '500px'}} src={suggestedShoes[0]?.images[0]?.get_image} />
                 </Link>
               </div>
               <div className="col-6 col-md-4 col-lg-3 mb-2">
                 <Link to={'/shoes/'+suggestedShoes[1]?.slug}>
-                  <img className='w-100' style={{maxHeight: '500px'}} src={import.meta.env.VITE_BACKEND_URL_BASE+suggestedShoes[1]?.images[0].get_image} />
+                  <img className='w-100' style={{maxHeight: '500px'}} src={suggestedShoes[1]?.images[0]?.get_image} />
                 </Link>
               </div>
               <div className="col-6 col-md-4 col-lg-3">
                 <Link to={'/shoes/'+suggestedShoes[0]?.slug}>
-                  <img className='w-100' style={{maxHeight: '500px'}} src={import.meta.env.VITE_BACKEND_URL_BASE+suggestedShoes[0]?.images[1]?.get_image} />
+                  <img className='w-100' style={{maxHeight: '500px'}} src={suggestedShoes[0]?.images[1]?.get_image} />
                 </Link>
               </div>
             </div>  
