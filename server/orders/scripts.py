@@ -40,7 +40,9 @@ def pagseguro_credit_card_request(value, name, exp_month, exp_year, ccv):
 
 
 def pagseguro_boleto_payment(product, value, shipping_info):
-    payload = json.dumps({
+  zipcode = shipping_info['zipcode'].split('-')
+
+  payload = json.dumps({
   "reference_id": "ex-00001",
   "description": product,
   "amount": {
@@ -62,7 +64,7 @@ def pagseguro_boleto_payment(product, value, shipping_info):
           "city": shipping_info['city'],
           "region": "Minas Gerais",
           "region_code": "MG",
-          "postal_code": shipping_info['zipcode'].split('-').join('')
+          "postal_code": ''.join(zipcode)
         },
         "tax_id": "22222222222",
         "email": shipping_info['email'],
@@ -71,7 +73,7 @@ def pagseguro_boleto_payment(product, value, shipping_info):
     }
   }
 })
-    response = requests.post(url, headers=headers, data=payload)
-    return json.loads(response.text)
+  response = requests.post(url, headers=headers, data=payload)
+  return json.loads(response.text)
 
 
