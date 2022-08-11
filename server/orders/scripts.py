@@ -1,7 +1,7 @@
 import requests
 import json
 from django.conf import settings
-from datetime import datetime
+from datetime import datetime, timedelta
 
 url = "https://sandbox.api.pagseguro.com/charges"
 
@@ -54,7 +54,7 @@ def pagseguro_boleto_payment(product, value, shipping_info):
     "installments": 1,
     "capture": False,
     "boleto": {
-      "due_date": datetime.today().strftime('%Y-%m-%d'),
+      "due_date": (datetime.today() + timedelta(days=4)).strftime('%Y-%m-%d'),
       "holder": {
         "address": {
           "country": "Brasil",
