@@ -1,6 +1,7 @@
 import requests
 import json
 from django.conf import settings
+from datetime import datetime
 
 url = "https://sandbox.api.pagseguro.com/charges"
 
@@ -51,7 +52,7 @@ def pagseguro_boleto_payment(product, value, shipping_info):
     "installments": 1,
     "capture": False,
     "boleto": {
-      "due_date": "2022-08-10",
+      "due_date": datetime.today().strftime('%Y-%m-%d'),
       "holder": {
         "address": {
           "country": "Brasil",
@@ -61,7 +62,7 @@ def pagseguro_boleto_payment(product, value, shipping_info):
           "city": shipping_info['city'],
           "region": "Minas Gerais",
           "region_code": "MG",
-          "postal_code": shipping_info['zipcode']
+          "postal_code": shipping_info['zipcode'].split('-').join('')
         },
         "tax_id": "22222222222",
         "email": shipping_info['email'],
