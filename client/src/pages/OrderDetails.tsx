@@ -67,7 +67,7 @@ function OrderDetails() {
                 <div className='row align-items-center pb-2'>
                     <div className='col-4 col-md-3'>
                         <Link to={'/shoes/'+item.product.slug}>
-                            <img className='w-100' src={import.meta.env.VITE_BACKEND_URL_BASE+item.product.images[0]?.get_thumbnail} />
+                            <img className='w-100' src={item.product.images[0]?.get_thumbnail} />
                         </Link>
                     </div>
                     <div className='col-8 col-md-9'>

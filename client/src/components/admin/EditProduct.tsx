@@ -166,7 +166,7 @@ function EditProduct() {
                     style={{maxHeight: "300px"}}
                     key={`image-${i}`} 
                     alt="shoe image" 
-                    src={file.get_image? import.meta.env.VITE_BACKEND_URL_BASE+file.get_thumbnail : URL.createObjectURL(file)} 
+                    src={file.get_image? file.get_thumbnail : URL.createObjectURL(file)} 
                     />
                   )   
               })}

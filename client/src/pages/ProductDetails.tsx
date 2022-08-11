@@ -76,7 +76,7 @@ function ProductDetails() {
                 {shoe?.images?.map((item) => {
                   return (
                     <Carousel.Item className="px-3 px-lg-0 text-center my-5">
-                      <img src={import.meta.env.VITE_BACKEND_URL_BASE+item.get_image} className="shadow-dark img-fluid" style={{minWidth: "300px", maxHeight: "600px"}}/>
+                      <img src={item.get_image} className="shadow-dark img-fluid" style={{minWidth: "300px", maxHeight: "600px"}}/>
                     </Carousel.Item>
                   )
                 })}

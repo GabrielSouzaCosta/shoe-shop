@@ -155,7 +155,7 @@ function Checkout() {
               return (
                 <>
                   <div key={item.name+'col-1'} className='col-5 col-lg-2 mb-2 bg-dark text-center'>
-                    <img src={import.meta.env.VITE_BACKEND_URL_BASE+item.image} className='img-fluid text-center' />
+                    <img src={item.image} className='img-fluid text-center' />
                   </div>
   
                   <div key={item.name+'col-2'} className='col-7 col-lg-9 align-self-center mb-2'>
